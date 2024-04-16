@@ -52,7 +52,7 @@ in {
       (nerdfonts.override {fonts = ["FiraCode" "Hack"];})
     ];
   };
-
+  #services.gpg-agent.enable = true;
   system = {
     stateVersion = 4;
 
@@ -93,8 +93,8 @@ in {
 
       trackpad = {
         Clicking = true;
-        TrackpadThreeFingerDrag = true;
-        Dragging = true;
+        TrackpadThreeFingerDrag = false;
+        Dragging = false;
       };
 
       spaces = {

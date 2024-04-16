@@ -26,11 +26,11 @@ with pkgs; [
 
   # Text and terminal utilities
   htop
-  neovim
   jq
+  neovim
   ripgrep
-  tree
   tmux
+  tree
   unrar
   unzip
 
@@ -39,4 +39,11 @@ with pkgs; [
   terraform-ls
   terraform-docs
   tflint
+
+  # Rust
+  cargo
+  rustc
+
+  # nodejs
+  nodejs_21
 ]

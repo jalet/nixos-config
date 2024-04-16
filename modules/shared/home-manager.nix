@@ -11,12 +11,9 @@ in {
   # Shared shell configuration
   zsh = {
     enable = true;
-    autosuggestion = {
-      enable = true;
-    };
     enableCompletion = true;
-    autocd = false;
-    plugins = [];
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
 
     oh-my-zsh = {
       enable = true;
@@ -53,7 +50,27 @@ in {
     shellAliases = {
       ls = "eza";
       cat = "bat";
-      diff = "difft";
+      diff = "batdiff";
+      rg = "batgrep";
+      man = "batman";
+
+      e = "nvim";
+    };
+  };
+
+  bat = {
+    enable = true;
+    config = {
+      style = "numbers,changes,header";
+      theme = "Catppuccin Mocha";
+    };
+    extraPackages = builtins.attrValues {
+      inherit
+        (pkgs.bat-extras)
+        batgrep
+        batdiff
+        batman
+        ;
     };
   };
 
@@ -166,48 +183,59 @@ in {
   starship = {
     enable = true;
     enableZshIntegration = true;
-    settings = {
-      command_timeout = 3000;
-      add_newline = true;
+    settings =
+      {
+        palette = "catppuccin_mocha";
+        command_timeout = 3000;
+        add_newline = true;
 
-      character = {
-        success_symbol = "[λ](bold green)";
-        error_symbol = "[✗](bold red)";
-      };
+        character = {
+          success_symbol = "[λ](bold green)";
+          error_symbol = "[✗](bold red)";
+        };
 
-      directory = {
-        read_only = " ";
-        truncate_to_repo = true;
-        truncation_length = 2;
-      };
+        directory = {
+          read_only = " ";
+          truncate_to_repo = true;
+          truncation_length = 2;
+        };
 
-      aws.symbol = "  ";
-      buf.symbol = " ";
-      c.symbol = " ";
-      conda.symbol = " ";
-      dart.symbol = " ";
-      docker_context.symbol = " ";
-      elixir.symbol = " ";
-      elm.symbol = " ";
-      git_branch.symbol = " ";
-      golang.symbol = " ";
-      haskell.symbol = " ";
-      hg_branch.symbol = " ";
-      java.symbol = " ";
-      julia.symbol = " ";
-      lua.symbol = " ";
-      memory_usage.symbol = " ";
-      meson.symbol = "喝 ";
-      nim.symbol = " ";
-      nix_shell.symbol = " ";
-      nodejs.symbol = " ";
-      package.symbol = " ";
-      python.symbol = " ";
-      rlang.symbol = "ﳒ ";
-      ruby.symbol = " ";
-      rust.symbol = " ";
-      scala.symbol = " ";
-      spack.symbol = "🅢  ";
-    };
+        aws.symbol = "  ";
+        buf.symbol = " ";
+        c.symbol = " ";
+        conda.symbol = " ";
+        dart.symbol = " ";
+        docker_context.symbol = " ";
+        elixir.symbol = " ";
+        elm.symbol = " ";
+        git_branch.symbol = " ";
+        golang.symbol = " ";
+        haskell.symbol = " ";
+        hg_branch.symbol = " ";
+        java.symbol = " ";
+        julia.symbol = " ";
+        lua.symbol = " ";
+        memory_usage.symbol = " ";
+        meson.symbol = "喝 ";
+        nim.symbol = " ";
+        nix_shell.symbol = " ";
+        nodejs.symbol = " ";
+        package.symbol = " ";
+        python.symbol = " ";
+        rlang.symbol = "ﳒ ";
+        ruby.symbol = " ";
+        rust.symbol = " ";
+        scala.symbol = " ";
+        spack.symbol = "🅢  ";
+      }
+      // builtins.fromTOML (builtins.readFile
+        (pkgs.fetchFromGitHub
+          {
+            owner = "catppuccin";
+            repo = "starship";
+            rev = "5629d2356f62a9f2f8efad3ff37476c19969bd4f";
+            sha256 = "sha256-nsRuxQFKbQkyEI4TXgvAjcroVdG+heKX5Pauq/4Ota0=";
+          }
+          + /palettes/mocha.toml));
   };
 }
