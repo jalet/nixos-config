@@ -35,13 +35,16 @@ with pkgs; [
   unrar
   unzip
 
-  # Languages and LSPs
+  # Languages, LSPs and Formatters
+  alejandra
   cargo
+  go_1_21
+  jdk22
   nodejs_21
   rustc
   terraform
   terraform-docs
   terraform-ls
-  tree-sitter
   tflint
+  tree-sitter
 ]

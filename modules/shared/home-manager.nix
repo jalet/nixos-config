@@ -242,4 +242,9 @@ in {
           }
           + /palettes/mocha.toml));
   };
+
+  java = {
+    enable = true;
+    package = pkgs.jdk22;
+  };
 }
