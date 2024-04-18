@@ -167,6 +167,10 @@ in {
 
   tmux = {
     enable = true;
+    extraConfig = ''
+      set -g default-terminal "tmux-256color"
+      set -ag terminal-overrides ",xterm-256color:RGB"
+    '';
     plugins = with pkgs.tmuxPlugins; [
       sensible
       resurrect
@@ -175,7 +179,6 @@ in {
         plugin = catppuccin;
         extraConfig = ''
           set -g @catppuccin_flavour 'mocha'
-          set-option -sa terminal-features ',screen-256color:RGB'
         '';
       }
     ];
