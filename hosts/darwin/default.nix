@@ -63,7 +63,7 @@ in {
         AppleShowAllExtensions = true;
 
         # 120, 90, 60, 30, 12, 6, 2
-        KeyRepeat = 2;
+        KeyRepeat = 30;
 
         # 120, 94, 68, 35, 25, 15
         InitialKeyRepeat = 15;

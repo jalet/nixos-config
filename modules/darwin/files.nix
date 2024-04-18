@@ -15,4 +15,6 @@ in {
     default-cache-ttl 60
     max-cache-ttl 120
   '';
+
+  "${HOME}/.hushlogin".text = ""; # Hide login message
 }
