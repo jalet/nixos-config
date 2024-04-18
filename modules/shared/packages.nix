@@ -7,6 +7,7 @@ with pkgs; [
   bat
   coreutils
   eza
+  fd
   neofetch
   oh-my-zsh
   openssh
@@ -35,15 +36,12 @@ with pkgs; [
   unzip
 
   # Languages and LSPs
-  terraform
-  terraform-ls
-  terraform-docs
-  tflint
-
-  # Rust
   cargo
-  rustc
-
-  # nodejs
   nodejs_21
+  rustc
+  terraform
+  terraform-docs
+  terraform-ls
+  tree-sitter
+  tflint
 ]

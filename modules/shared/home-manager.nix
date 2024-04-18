@@ -175,6 +175,7 @@ in {
         plugin = catppuccin;
         extraConfig = ''
           set -g @catppuccin_flavour 'mocha'
+          set-option -sa terminal-features ',screen-256color:RGB'
         '';
       }
     ];
