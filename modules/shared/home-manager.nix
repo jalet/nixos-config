@@ -171,6 +171,48 @@ in {
 
   alacritty = {
     enable = true;
+
+    settings = {
+      import = ["/Users/jj/.config/alacritty/themes/catppuccin-mocha.toml"];
+
+      env = {
+        TERM = "xterm-256color";
+      };
+
+      cursor.style = {
+        shape = "Block";
+        blinking = "Off";
+      };
+
+      font = {
+        size = 15.0;
+
+        normal = {
+          family = "FiraCode Nerd Font";
+          style = "Regular";
+        };
+
+        bold = {
+          family = "FiraCode Nerd Font";
+          style = "Bold";
+        };
+
+        italic = {
+          family = "FiraCode Nerd Font";
+          style = "Italic";
+        };
+      };
+
+      window = {
+        title = user;
+        opacity = 0.95;
+
+        padding = {
+          x = 5;
+          y = 5;
+        };
+      };
+    };
   };
 
   tmux = {
