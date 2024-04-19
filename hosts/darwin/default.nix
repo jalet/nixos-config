@@ -68,6 +68,9 @@ in {
         # 120, 94, 68, 35, 25, 15
         InitialKeyRepeat = 15;
 
+        # Whether to autohide the menu bar. The default is false.
+        _HIHideMenuBar = true;
+
         "com.apple.mouse.tapBehavior" = 1;
         "com.apple.sound.beep.volume" = 0.0;
         "com.apple.sound.beep.feedback" = 0;
@@ -223,6 +226,6 @@ in {
     # 0x5C == 9
     #
     #################################################################################
-    lctrl + alt - 0x53 :${pkgs.alacritty}/Applications/Alacritty.app/Contents/MacOS/alacritty --working-directory ~ -e tmux new 
+    lctrl + alt - 0x53 :${pkgs.alacritty}/Applications/Alacritty.app/Contents/MacOS/alacritty --working-directory ~ -e tmux new
   '';
 }
