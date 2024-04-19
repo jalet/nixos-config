@@ -121,7 +121,7 @@ in {
     yabai -m config window_topmost               off
     yabai -m config window_opacity               off
     yabai -m config window_opacity_duration      0.0
-    yabai -m config window_shadow                on
+    yabai -m config window_shadow                off
     yabai -m config window_border                off
     yabai -m config window_border_width          4
     yabai -m config active_window_border_color   0xff775759
@@ -226,7 +226,7 @@ in {
     # 0x5C == 9
     #
     #################################################################################
-    lctrl + alt - 0x53 :${pkgs.alacritty}/Applications/Alacritty.app/Contents/MacOS/alacritty --working-directory ~ -e tmux new
+    lctrl + alt - 0x53 :${pkgs.alacritty}/Applications/Alacritty.app/Contents/MacOS/alacritty --working-directory ~
   '';
 
   services.sketchybar.enable = false;
