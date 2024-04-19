@@ -112,16 +112,6 @@ in {
   services.yabai.package = pkgs.yabai;
   services.yabai.enableScriptingAddition = true;
   services.yabai.extraConfig = ''
-    yabai -m config status_bar                   on
-    yabai -m config status_bar_text_font         "Helvetica Neue:Bold:12.0"
-    yabai -m config status_bar_icon_font         "FontAwesome:Regular:12.0"
-    yabai -m config status_bar_background_color  0xff202020
-    yabai -m config status_bar_foreground_color  0xffa8a8a8
-    yabai -m config status_bar_space_icon_strip  I II III IV V VI VII VIII IX X
-    yabai -m config status_bar_power_icon_strip   
-    yabai -m config status_bar_space_icon        
-    yabai -m config status_bar_clock_icon        
-
     yabai -m config mouse_follows_focus          off
     yabai -m config focus_follows_mouse          on
     yabai -m config window_placement             first_child
@@ -217,5 +207,22 @@ in {
     shift + lalt - j : yabai -m window --insert south
     shift + lalt - k : yabai -m window --insert north
     shift + lalt - l : yabai -m window --insert east
+
+    #################################################################################
+    # Shortcuts for opening application or run scripts. All using the <leader> + num
+    # pad keys.
+    #
+    # 0x53 == 1
+    # 0x54 == 2
+    # 0x55 == 3
+    # 0x56 == 4
+    # 0x57 == 5
+    # 0x58 == 6
+    # 0x59 == 7
+    # 0x5B == 8
+    # 0x5C == 9
+    #
+    #################################################################################
+    lctrl + alt - 0x53 :${pkgs.alacritty}/Applications/Alacritty.app/Contents/MacOS/alacritty --working-directory ~ -e tmux new 
   '';
 }
