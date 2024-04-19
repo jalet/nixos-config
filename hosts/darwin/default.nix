@@ -69,7 +69,7 @@ in {
         InitialKeyRepeat = 15;
 
         # Whether to autohide the menu bar. The default is false.
-        _HIHideMenuBar = true;
+        _HIHideMenuBar = false;
 
         "com.apple.mouse.tapBehavior" = 1;
         "com.apple.sound.beep.volume" = 0.0;
@@ -227,5 +227,45 @@ in {
     #
     #################################################################################
     lctrl + alt - 0x53 :${pkgs.alacritty}/Applications/Alacritty.app/Contents/MacOS/alacritty --working-directory ~ -e tmux new
+  '';
+
+  services.sketchybar.enable = false;
+  services.sketchybar.package = pkgs.sketchybar;
+  services.sketchybar.config = ''
+    #!/usr/bin/env zsh
+
+    FONT_FACE="FiraCode Nerd Font"
+    SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
+
+    sketchybar --bar \
+        height=32 \
+        color=0x00000000 \
+        margin=0 \
+        sticky=on \
+        padding_left=23 \
+        padding_right=23 \
+        notch_width=188 \
+        display=main
+
+    # Alternatiive background colors
+    # label.color=0xffffffff
+    # background.color=0x9924273a
+    sketchybar --default \
+        background.color=0x66494d64 \
+        background.corner_radius=5 \
+        background.padding_right=5 \
+        background.height=26 \
+        icon.font="$FONT_FACE:Medium:15.0" \
+        icon.padding_left=5 \
+        icon.padding_right=5 \
+        label.font="$FONT_FACE:Medium:12.0" \
+        label.color=0xffcad3f5 \
+        label.y_offset=0 \
+        label.padding_left=0 \
+        label.padding_right=5
+
+    ##### Finalizing Setup #####
+    sketchybar --update
+    sketchybar --trigger space_change
   '';
 }

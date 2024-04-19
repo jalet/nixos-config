@@ -5,7 +5,8 @@ in
   shared-packages
   ++ [
     dockutil
+    pinentry_mac
+    sketchybar
     skhd
     yabai
-    pinentry_mac
   ]
