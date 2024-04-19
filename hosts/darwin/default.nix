@@ -63,10 +63,10 @@ in {
         AppleShowAllExtensions = true;
 
         # 120, 90, 60, 30, 12, 6, 2
-        KeyRepeat = 30;
+        KeyRepeat = 1;
 
         # 120, 94, 68, 35, 25, 15
-        InitialKeyRepeat = 15;
+        InitialKeyRepeat = 10;
 
         # Whether to autohide the menu bar. The default is false.
         _HIHideMenuBar = false;
