@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }: let
   name = "Joakim Jarsäter";
@@ -205,7 +203,7 @@ in {
 
       window = {
         title = user;
-        opacity = 0.95;
+        opacity = 0.85;
 
         padding = {
           x = 5;

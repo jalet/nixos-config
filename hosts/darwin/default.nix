@@ -143,8 +143,6 @@ in {
     yabai -m config right_padding                10
     yabai -m config window_gap                   10
     yabai -m rule --add app="choose" manage=off
-
-    yabai --load-sa
   '';
 
   services.skhd.enable = true;
