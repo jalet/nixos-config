@@ -52,6 +52,24 @@ in {
     	--set network.up label="$UP_FORMAT" icon.highlight=$(if [ "$UP" -gt "0" ]; then echo "on"; else echo "off"; fi)
   '';
 
+  "${HOME}/.config/sketchybar/plugins/kblayout.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+
+      export kbl=$(defaults read ~/Library/Preferences/com.apple.HIToolbox.plist AppleSelectedInputSources | egrep -w 'KeyboardLayout Name' | cut -d \" -f4)
+
+      if [ "$kbl" = "U.S." ]; then
+        LANG="US"
+      elif [ "$kbl" = "Swedish - Pro" ]; then
+        LANG="SE"
+      else 
+        LANG="??"
+      fi
+
+      sketchybar --set "$NAME" label="$LANG"
+    '';
+  };
   # https://github.com/FelixKratz/SketchyBar/discussions/12?sort=top#discussioncomment-4623255
   "${HOME}/.config/sketchybar/plugins/icons.sh" = {
     executable = true;

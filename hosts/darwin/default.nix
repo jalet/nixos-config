@@ -307,6 +307,8 @@ in {
 
     sketchybar --add item clock right \
                --set clock update_freq=10 icon=  script="$PLUGIN_DIR/clock.sh" \
+               --add item keyboard right \
+               --set keyboard update_freq=1 icon=  script="$PLUGIN_DIR/kblayout.sh" \
                --add item volume right \
                --set volume script="$PLUGIN_DIR/volume.sh" \
                --subscribe volume volume_change \
