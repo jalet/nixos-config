@@ -12,6 +12,8 @@ with pkgs; [
   oh-my-zsh
   openssh
   starship
+  tlrc      # tdlr client written in Rust
+  qemu
   wget
   zip
 
@@ -21,14 +23,15 @@ with pkgs; [
   yubikey-agent
   yubikey-manager
 
-  # Cloud-related tools and SDKs
+  # Text and terminal utilities
   docker
   docker-compose
-
-  # Text and terminal utilities
+  ctop
   htop
   jq
   neovim
+  podman
+  podman-tui
   ripgrep
   tmux
   tree

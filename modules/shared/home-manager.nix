@@ -43,6 +43,9 @@ in {
       export GPG_TTY="$(tty)"
       export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
       gpgconf --launch gpg-agent
+
+      # Podman
+      export DOCKER_HOST='unix:///Users/${user}/.local/share/containers/podman/machine/qemu/podman.sock'
     '';
 
     shellAliases = {
