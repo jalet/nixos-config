@@ -29,6 +29,7 @@ in {
     masApps = {
       "Microsoft Outlook" = 985367838;
       "Slack for desktop" = 803453959;
+      "OneDrive" = 823766827; 
     };
   };
 
@@ -65,7 +66,6 @@ in {
     {path = "/System/Applications/Messages.app/";}
     {path = "${pkgs.alacritty}/Applications/Alacritty.app/";}
     {path = "/Applications/Microsoft Outlook.app/";}
-    {path = "/Applications/Microsoft Teams (work or school).app/";}
     {path = "/Applications/Brave Browser.app/";}
     {path = "/Applications/Spotify.app/";}
   ];
