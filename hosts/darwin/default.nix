@@ -245,14 +245,12 @@ in {
     source "${HOME}/.config/sketchybar/icons.sh"      # Loads all defined icons
 
     sketchybar --bar \
-        color=0xF21E1E2E \
+        color=0xCC1E1E2E \
         height=32 \
-        margin=10 \
         notch_width=188 \
         padding_left=10 \
         padding_right=10 \
-        sticky=off \
-        y_offset=10
+        sticky=off
 
     sketchybar --default \
         icon.font="$FONT_FACE:Bold:15.0" \
