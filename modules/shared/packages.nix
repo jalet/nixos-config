@@ -8,12 +8,14 @@ with pkgs; [
   coreutils
   eza
   fd
+  kitty
+  kitty-themes
   neofetch
   oh-my-zsh
   openssh
+  qemu
   starship
   tlrc      # tdlr client written in Rust
-  qemu
   wget
   zip
 

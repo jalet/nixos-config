@@ -216,6 +216,16 @@ in {
     };
   };
 
+  kitty = {
+    enable = true;
+    font.name = "FiraCode Nerd Fond";
+    font.size = 15;
+    theme = "Catppuccin-Mocha";
+    extraConfig = ''
+      background_opacity 0.85
+    '';
+  };
+
   tmux = {
     enable = true;
     extraConfig = ''

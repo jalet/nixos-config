@@ -55,7 +55,7 @@ in {
 
       # Marked broken Oct 20, 2022 check later to remove this
       # https://github.com/nix-community/home-manager/issues/3344
-      manual.manpages.enable = false;
+      manual.manpages.enable = true;
     };
   };
 
@@ -65,6 +65,7 @@ in {
     {path = "/Applications/Slack.app/";}
     {path = "/System/Applications/Messages.app/";}
     {path = "${pkgs.alacritty}/Applications/Alacritty.app/";}
+    {path = "${pkgs.kitty}/Applications/Kitty.app/";}
     {path = "/Applications/Microsoft Outlook.app/";}
     {path = "/Applications/Brave Browser.app/";}
     {path = "/Applications/Spotify.app/";}
