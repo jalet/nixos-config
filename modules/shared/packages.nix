@@ -45,6 +45,8 @@ with pkgs; [
   cargo
   go_1_21
   jdk22
+  lua
+  luarocks
   nodejs_21
   rustc
   terraform
