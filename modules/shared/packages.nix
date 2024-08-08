@@ -15,7 +15,6 @@ with pkgs; [
   openssh
   qemu
   starship
-  tlrc      # tdlr client written in Rust
   wget
   zip
 
@@ -47,7 +46,7 @@ with pkgs; [
   jdk22
   lua
   luarocks
-  nodejs_21
+  nodejs_22
   rustc
   terraform
   terraform-docs

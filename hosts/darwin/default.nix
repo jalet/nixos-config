@@ -17,7 +17,7 @@ in {
 
   # Setup user, packages, programs
   nix = {
-    package = pkgs.nixUnstable;
+    package = pkgs.nixVersions.latest;
     settings.trusted-users = ["@admin" "''${user}"];
 
     gc = {
@@ -46,10 +46,8 @@ in {
     ]
     ++ (import ../../modules/shared/packages.nix {inherit pkgs;});
 
-  # Enable fonts dir
   fonts = {
-    fontDir.enable = true;
-    fonts = with pkgs; [
+    packages = with pkgs; [
       (nerdfonts.override {fonts = ["FiraCode" "Hack"];})
     ];
   };
