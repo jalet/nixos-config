@@ -219,7 +219,7 @@ in {
 
   kitty = {
     enable = true;
-    font.name = "FiraCode Nerd Fond";
+    font.name = "FiraCode Nerd Font Mono";
     font.size = 15;
     theme = "Catppuccin-Mocha";
     extraConfig = ''
