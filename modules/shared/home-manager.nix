@@ -224,6 +224,9 @@ in {
     theme = "Catppuccin-Mocha";
     extraConfig = ''
       background_opacity 0.85
+      hide_window_decorations titlebar-and-corners
+      window_margin_width 5 5 10 5
+      tab_bar_style powerline
     '';
   };
 
