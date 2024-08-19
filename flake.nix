@@ -23,9 +23,9 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
+    nikitabobko-tap = {
+      url = "github:nikitabobko/homebrew-tap";
+      flake = false;
     };
   };
 
@@ -36,9 +36,9 @@
     homebrew-bundle,
     homebrew-core,
     homebrew-cask,
+    nikitabobko-tap,
     home-manager,
     nixpkgs,
-    disko,
   } @ inputs: let
     user = "jj";
     linuxSystems = ["x86_64-linux" "aarch64-linux"];
@@ -91,15 +91,15 @@
             nix-homebrew.darwinModules.nix-homebrew
             {
               nix-homebrew = {
-                inherit user;
                 enable = true;
+                user = user;
                 taps = {
                   "homebrew/homebrew-core" = homebrew-core;
                   "homebrew/homebrew-cask" = homebrew-cask;
                   "homebrew/homebrew-bundle" = homebrew-bundle;
+                  "nikitabobko/homebrew-tap" = nikitabobko-tap;
                 };
-                mutableTaps = false;
-                autoMigrate = true;
+		mutableTaps = false;
               };
             }
             ./hosts/darwin

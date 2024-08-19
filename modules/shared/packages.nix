@@ -1,7 +1,6 @@
 {pkgs}:
 with pkgs; [
   # General packages for development and system management
-  alacritty
   awscli2
   bash-completion
   bat
@@ -11,10 +10,11 @@ with pkgs; [
   kitty
   kitty-themes
   neofetch
+  oh-my-posh
   oh-my-zsh
+  open-policy-agent
   openssh
   qemu
-  starship
   wget
   zip
 

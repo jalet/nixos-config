@@ -6,7 +6,4 @@ in
   ++ [
     dockutil
     pinentry_mac
-    sketchybar
-    skhd
-    yabai
   ]

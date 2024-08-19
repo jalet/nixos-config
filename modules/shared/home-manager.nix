@@ -49,7 +49,7 @@ in {
     '';
 
     shellAliases = {
-      ls = "eza";
+      ls = "eza --color=always --icons=always";
       cat = "bat";
       diff = "batdiff";
       rg = "batgrep";
@@ -171,52 +171,6 @@ in {
     };
   };
 
-  alacritty = {
-    enable = true;
-
-    settings = {
-      import = ["/Users/jj/.config/alacritty/themes/catppuccin-mocha.toml"];
-
-      env = {
-        TERM = "xterm-256color";
-      };
-
-      cursor.style = {
-        shape = "Block";
-        blinking = "Off";
-      };
-
-      font = {
-        size = 15.0;
-
-        normal = {
-          family = "FiraCode Nerd Font";
-          style = "Regular";
-        };
-
-        bold = {
-          family = "FiraCode Nerd Font";
-          style = "Bold";
-        };
-
-        italic = {
-          family = "FiraCode Nerd Font";
-          style = "Italic";
-        };
-      };
-
-      window = {
-        title = user;
-        opacity = 0.85;
-
-        padding = {
-          x = 5;
-          y = 5;
-        };
-      };
-    };
-  };
-
   kitty = {
     enable = true;
     font.name = "FiraCode Nerd Font Mono";
@@ -249,63 +203,73 @@ in {
     ];
   };
 
-  starship = {
+  oh-my-posh = {
     enable = true;
-    enableZshIntegration = true;
-    settings =
-      {
-        palette = "catppuccin_mocha";
-        command_timeout = 3000;
-        add_newline = true;
+    enableBashIntegration = true;
+    settings = builtins.fromTOML(''
+      "$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
+      final_space = true
+      version = 2
+      disable_notice = true
 
-        character = {
-          success_symbol = "[λ](bold green)";
-          error_symbol = "[✗](bold red)";
-        };
+      [palette]
+      os = "#ACB0BE"
+      closer = "p:os"
+      pink = "#F5C2E7"
+      lavender = "#B4BEFE"
+      blue = "#89B4FA"
 
-        directory = {
-          read_only = " ";
-          truncate_to_repo = true;
-          truncation_length = 2;
-        };
+      [[blocks]]
+      alignment = "left"
+      type = "prompt"
 
-        aws.symbol = "  ";
-        buf.symbol = " ";
-        c.symbol = " ";
-        conda.symbol = " ";
-        dart.symbol = " ";
-        docker_context.symbol = " ";
-        elixir.symbol = " ";
-        elm.symbol = " ";
-        git_branch.symbol = " ";
-        golang.symbol = " ";
-        haskell.symbol = " ";
-        hg_branch.symbol = " ";
-        java.symbol = " ";
-        julia.symbol = " ";
-        lua.symbol = " ";
-        memory_usage.symbol = " ";
-        meson.symbol = "喝 ";
-        nim.symbol = " ";
-        nix_shell.symbol = " ";
-        nodejs.symbol = " ";
-        package.symbol = " ";
-        python.symbol = " ";
-        rlang.symbol = "ﳒ ";
-        ruby.symbol = " ";
-        rust.symbol = " ";
-        scala.symbol = " ";
-        spack.symbol = "🅢  ";
-      }
-      // builtins.fromTOML (builtins.readFile
-        (pkgs.fetchFromGitHub
-          {
-            owner = "catppuccin";
-            repo = "starship";
-            rev = "5629d2356f62a9f2f8efad3ff37476c19969bd4f";
-            sha256 = "sha256-nsRuxQFKbQkyEI4TXgvAjcroVdG+heKX5Pauq/4Ota0=";
-          }
-          + /palettes/mocha.toml));
+        [[blocks.segments]]
+        foreground = "p:os"
+        style = "plain"
+        template = "λ "
+        type = "text"
+
+        [[blocks.segments]]
+        foreground = "p:blue"
+        style = "plain"
+        template = "{{ .UserName }} "
+        type = "session"
+
+        [[blocks.segments]]
+        foreground = "p:pink"
+        style = "plain"
+        template = "{{ .Path }} "
+        type = "path"
+
+          [blocks.segments.properties]
+          folder_icon = "...."
+          home_icon = "~"
+          style = "agnoster_short"
+
+        [[blocks.segments]]
+        foreground = "p:lavender"
+        template = "{{ .HEAD }} "
+        style = "plain"
+        type = "git"
+
+          [blocks.segments.properties]
+          branch_icon = " "
+          cherry_pick_icon = " "
+          commit_icon = " "
+          fetch_status = false
+          fetch_upstream_icon = false
+          merge_icon = " "
+          no_commits_icon = " "
+          rebase_icon = " "
+          revert_icon = " "
+          tag_icon = " "
+
+        [[blocks.segments]]
+        style = "plain"
+        foreground = "p:closer"
+        template = ""
+        type = "text"
+    '');
   };
 
   java = {

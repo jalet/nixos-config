@@ -6,6 +6,8 @@
 }: let
   HOME = "${config.users.users.${user}.home}";
 in {
+  "${HOME}/.hushlogin".text = ""; # Hide login message
+
   "${HOME}/.gnupg/gpg-agent.conf".text = ''
     # https://github.com/drduh/config/blob/master/gpg-agent.conf
     # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
@@ -16,201 +18,161 @@ in {
     max-cache-ttl 120
   '';
 
-  "${HOME}/.hushlogin".text = ""; # Hide login message
 
-  # https://github.com/felixkratz/sketchybar/discussions/12?sort=top#discussioncomment-4623255
-  "${HOME}/.config/sketchybar/plugins/disk.sh".text = ''
-    #!/usr/bin/env bash
-    #disk.sh
+  "${HOME}/.config/aerospace/aerospace.toml".text = ''
+    # Place a copy of this config to ~/.aerospace.toml
+    # After that, you can edit ~/.aerospace.toml to your liking
 
-    sketchybar -m --set "$NAME" label="$(df -H | grep -E '^(/dev/disk3s5).' | awk '{ printf ("%s\n", $5) }')"
+    # You can use it to add commands that run after login to macOS user session.
+    # 'start-at-login' needs to be 'true' for 'after-login-command' to work
+    # Available commands: https://nikitabobko.github.io/AeroSpace/commands
+    after-login-command = []
+
+    # You can use it to add commands that run after AeroSpace startup.
+    # 'after-startup-command' is run after 'after-login-command'
+    # Available commands : https://nikitabobko.github.io/AeroSpace/commands
+    after-startup-command = []
+
+    # Start AeroSpace at login
+    start-at-login = false
+
+    # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
+    enable-normalization-flatten-containers = true
+    enable-normalization-opposite-orientation-for-nested-containers = true
+
+    # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
+    # The 'accordion-padding' specifies the size of accordion padding
+    # You can set 0 to disable the padding feature
+    accordion-padding = 30
+
+    # Possible values: tiles|accordion
+    default-root-container-layout = 'tiles'
+
+    # Possible values: horizontal|vertical|auto
+    # 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
+    #               tall monitor (anything higher than wide) gets vertical orientation
+    default-root-container-orientation = 'auto'
+
+    # Possible values: (qwerty|dvorak)
+    # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
+    key-mapping.preset = 'qwerty'
+
+    # Mouse follows focus when focused monitor changes
+    # Drop it from your config, if you don't like this behavior
+    # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
+    # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
+    # Fallback value (if you omit the key): on-focused-monitor-changed = []
+    on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+    # Gaps between windows (inner-*) and between monitor edges (outer-*).
+    # Possible values:
+    # - Constant:     gaps.outer.top = 8
+    # - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
+    #                 In this example, 24 is a default value when there is no match.
+    #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
+    #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
+    [gaps]
+    inner.horizontal = 10
+    inner.vertical =   10
+    outer.left =       10
+    outer.bottom =     10
+    outer.top =        10
+    outer.right =      10
+
+    # 'main' binding mode declaration
+    # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+    # 'main' binding mode must be always presented
+    # Fallback value (if you omit the key): mode.main.binding = {}
+    [mode.main.binding]
+
+    # All possible keys:
+    # - Letters.        a, b, c, ..., z
+    # - Numbers.        0, 1, 2, ..., 9
+    # - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9
+    # - F-keys.         f1, f2, ..., f20
+    # - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon, backtick,
+    #                   leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab
+    # - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,
+    #                   keypadMinus, keypadMultiply, keypadPlus
+    # - Arrows.         left, down, up, right
+
+    # All possible modifiers: cmd, alt, ctrl, shift
+
+    # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
+    # You can uncomment the following lines to open up terminal with alt + enter shortcut (like in i3)
+    # alt-enter = '''exec-and-forget osascript -e '
+    # tell application "Terminal"
+    #     do script
+    #     activate
+    # end tell'
+    # '''
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#layout
+    alt-slash = 'layout tiles horizontal vertical'
+    alt-comma = 'layout accordion horizontal vertical'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#focus
+    alt-h = 'focus left'
+    alt-j = 'focus down'
+    alt-k = 'focus up'
+    alt-l = 'focus right'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#move
+    alt-shift-h = 'move left'
+    alt-shift-j = 'move down'
+    alt-shift-k = 'move up'
+    alt-shift-l = 'move right'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#resize
+    alt-shift-minus = 'resize smart -50'
+    alt-shift-equal = 'resize smart +50'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
+    alt-1 = 'workspace 1'
+    alt-2 = 'workspace 2'
+    alt-3 = 'workspace 3'
+    alt-4 = 'workspace 4'
+    alt-5 = 'workspace 5'
+    alt-6 = 'workspace 6'
+    alt-7 = 'workspace 7'
+    alt-8 = 'workspace 8'
+    alt-9 = 'workspace 9'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
+    alt-shift-1 = 'move-node-to-workspace 1'
+    alt-shift-2 = 'move-node-to-workspace 2'
+    alt-shift-3 = 'move-node-to-workspace 3'
+    alt-shift-4 = 'move-node-to-workspace 4'
+    alt-shift-5 = 'move-node-to-workspace 5'
+    alt-shift-6 = 'move-node-to-workspace 6'
+    alt-shift-7 = 'move-node-to-workspace 7'
+    alt-shift-8 = 'move-node-to-workspace 8'
+    alt-shift-9 = 'move-node-to-workspace 9'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
+    alt-tab = 'workspace-back-and-forth'
+    # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
+    alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#mode
+    alt-shift-semicolon = 'mode service'
+
+    # 'service' binding mode declaration.
+    # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+    [mode.service.binding]
+    esc = ['reload-config', 'mode main']
+    r = ['flatten-workspace-tree', 'mode main'] # reset layout
+    f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
+    backspace = ['close-all-windows-but-current', 'mode main']
+
+    # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
+    #s = ['layout sticky tiling', 'mode main']
+
+    alt-shift-h = ['join-with left', 'mode main']
+    alt-shift-j = ['join-with down', 'mode main']
+    alt-shift-k = ['join-with up', 'mode main']
+    alt-shift-l = ['join-with right', 'mode main']
   '';
-
-  # https://github.com/FelixKratz/SketchyBar/discussions/12?sort=top#discussioncomment-4623255
-  "${HOME}/.config/sketchybar/plugins/network.sh".text = ''
-    #!/usr/bin/env bash
-
-    UPDOWN=$(ifstat -i "en0" -b 0.1 1 | tail -n1)
-    DOWN=$(echo "$UPDOWN" | awk "{ print \$1 }" | cut -f1 -d ".")
-    UP=$(echo "$UPDOWN" | awk "{ print \$2 }" | cut -f1 -d ".")
-
-    DOWN_FORMAT=""
-    if [ "$DOWN" -gt "999" ]; then
-    	DOWN_FORMAT=$(echo "$DOWN" | awk '{ printf "%03.0f Mbps", $1 / 1000}')
-    else
-    	DOWN_FORMAT=$(echo "$DOWN" | awk '{ printf "%03.0f kbps", $1}')
-    fi
-
-    UP_FORMAT=""
-    if [ "$UP" -gt "999" ]; then
-    	UP_FORMAT=$(echo "$UP" | awk '{ printf "%03.0f Mbps", $1 / 1000}')
-    else
-    	UP_FORMAT=$(echo "$UP" | awk '{ printf "%03.0f kbps", $1}')
-    fi
-
-    sketchybar -m --set network.down label="$DOWN_FORMAT" icon.highlight=$(if [ "$DOWN" -gt "0" ]; then echo "on"; else echo "off"; fi) \
-    	--set network.up label="$UP_FORMAT" icon.highlight=$(if [ "$UP" -gt "0" ]; then echo "on"; else echo "off"; fi)
-  '';
-
-  "${HOME}/.config/sketchybar/plugins/kblayout.sh" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-
-      export kbl=$(defaults read ~/Library/Preferences/com.apple.HIToolbox.plist AppleSelectedInputSources | egrep -w 'KeyboardLayout Name' | cut -d \" -f4)
-
-      if [ "$kbl" = "U.S." ]; then
-        LANG="US"
-      elif [ "$kbl" = "Swedish - Pro" ]; then
-        LANG="SE"
-      else 
-        LANG="??"
-      fi
-
-      sketchybar --set "$NAME" label="$LANG"
-    '';
-  };
-  # https://github.com/FelixKratz/SketchyBar/discussions/12?sort=top#discussioncomment-4623255
-  "${HOME}/.config/sketchybar/plugins/icons.sh" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-
-      export BATTERY=
-      export CPU=
-      export DISK=
-      export MEMORY=﬙
-      export NETWORK=
-      export NETWORK_DOWN=
-      export NETWORK_UP=
-    '';
-  };
-
-  # https://github.com/FelixKratz/SketchyBar/discussions/12?sort=top#discussioncomment-4623255
-  "${HOME}/.config/sketchybar/plugins/colors.sh" = {
-    executable = true;
-    text = ''
-      !/usr/bin/env bash
-
-      #
-      #
-      # Catppuccin Macchiato palette
-      #
-      #
-
-      export BASE=0xff24273a
-      export MANTLE=0xff1e2030
-      export CRUST=0xff181926
-
-      export TEXT=0xffcad3f5
-      export SUBTEXT0=0xffb8c0e0
-      export SUBTEXT1=0xffa5adcb
-
-      export SURFACE0=0xff363a4f
-      export SURFACE1=0xff494d64
-      export SURFACE2=0xff5b6078
-
-      export OVERLAY0=0xff6e738d
-      export OVERLAY1=0xff8087a2
-      export OVERLAY2=0xff939ab7
-
-      export BLUE=0xff8aadf4
-      export LAVENDER=0xffb7bdf8
-      export SAPPHIRE=0xff7dc4e4
-      export SKY=0xff91d7e3
-      export TEAL=0xff8bd5ca
-      export GREEN=0xffa6da95
-      export YELLOW=0xffeed49f
-      export PEACH=0xfff5a97f
-      export MAROON=0xffee99a0
-      export RED=0xffed8796
-      export MAUVE=0xffc6a0f6
-      export PINK=0xfff5bde6
-      export FLAMINGO=0xfff0c6c6
-      export ROSEWATER=0xfff4dbd6
-
-      export RANDOM_CAT_COLOR=("$BLUE" "$LAVENDER" "$SAPPHIRE" "$SKY" "$TEAL" "$GREEN" "$YELLOW" "$PEACH" "$MAROON" "$RED" "$MAUVE" "$PINK" "$FLAMINGO" "$ROSEWATER")
-
-      function getRandomCatColor() {
-        echo "''${RANDOM_CAT_COLOR[ $RANDOM % ''${#RANDOM_CAT_COLOR[@]} ]}"
-      }
-
-      #
-      # LEGACY COLORS
-      #
-      # Color Palette
-      export GREY=0xff939ab7
-      export TRANSPARENT=0x00000000
-
-      # General bar colors
-      export BAR_COLOR=$BASE
-      export ICON_COLOR=$TEXT # Color of all icons
-      export LABEL_COLOR=$TEXT # Color of all labels
-    '';
-  };
-
-  "${HOME}/.config/sketchybar/plugins/battery.sh" = {
-    executable = true;
-    text =
-      pkgs.fetchFromGitHub
-      {
-        owner = "FelixKratz";
-        repo = "SketchyBar";
-        rev = "c6b8aa8288e4895f0d7764fb28376ef90cc00740";
-        sha256 = "sha256-oP/1It82EfbN2yNEtrh9nMSa9RA7nRarn8dbQnO3Spg=";
-      }
-      + /plugins/battery.sh;
-  };
-
-  "${HOME}/.config/sketchybar/plugins/space.sh" = {
-    executable = true;
-    text =
-      pkgs.fetchFromGitHub
-      {
-        owner = "FelixKratz";
-        repo = "SketchyBar";
-        rev = "c6b8aa8288e4895f0d7764fb28376ef90cc00740";
-        sha256 = "sha256-oP/1It82EfbN2yNEtrh9nMSa9RA7nRarn8dbQnO3Spg=";
-      }
-      + /plugins/space.sh;
-  };
-
-  "${HOME}/.config/sketchybar/plugins/volume.sh" = {
-    executable = true;
-    text =
-      pkgs.fetchFromGitHub
-      {
-        owner = "FelixKratz";
-        repo = "SketchyBar";
-        rev = "c6b8aa8288e4895f0d7764fb28376ef90cc00740";
-        sha256 = "sha256-oP/1It82EfbN2yNEtrh9nMSa9RA7nRarn8dbQnO3Spg=";
-      }
-      + /plugins/volume.sh;
-  };
-
-  "${HOME}/.config/sketchybar/plugins/front_app.sh" = {
-    executable = true;
-    text =
-      pkgs.fetchFromGitHub
-      {
-        owner = "FelixKratz";
-        repo = "SketchyBar";
-        rev = "c6b8aa8288e4895f0d7764fb28376ef90cc00740";
-        sha256 = "sha256-oP/1It82EfbN2yNEtrh9nMSa9RA7nRarn8dbQnO3Spg=";
-      }
-      + /plugins/front_app.sh;
-  };
-
-  "${HOME}/.config/sketchybar/plugins/clock.sh" = {
-    executable = true;
-    text =
-      pkgs.fetchFromGitHub
-      {
-        owner = "FelixKratz";
-        repo = "SketchyBar";
-        rev = "c6b8aa8288e4895f0d7764fb28376ef90cc00740";
-        sha256 = "sha256-oP/1It82EfbN2yNEtrh9nMSa9RA7nRarn8dbQnO3Spg=";
-      }
-      + /plugins/clock.sh;
-  };
 }
