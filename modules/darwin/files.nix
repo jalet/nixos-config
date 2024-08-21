@@ -34,7 +34,7 @@ in {
     after-startup-command = []
 
     # Start AeroSpace at login
-    start-at-login = false
+    start-at-login = true 
 
     # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
     enable-normalization-flatten-containers = true
@@ -63,6 +63,7 @@ in {
     # See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
     # Fallback value (if you omit the key): on-focused-monitor-changed = []
     on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+    on-focus-changed = ['move-mouse window-lazy-center']
 
     # Gaps between windows (inner-*) and between monitor edges (outer-*).
     # Possible values:
@@ -151,6 +152,10 @@ in {
     alt-shift-8 = 'move-node-to-workspace 8'
     alt-shift-9 = 'move-node-to-workspace 9'
 
+    # Other
+    alt-shift-f = 'fullscreen'
+    alt-shift-r = 'mode resize'
+
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
@@ -174,5 +179,53 @@ in {
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+
+    [mode.resize.binding]
+    # See: https://nikitabobko.github.io/AeroSpace/commands#resize
+    h = 'resize width -10'
+    j = 'resize height +10'
+    k = 'resize height -10'
+    l = 'resize width +10'
+    b = 'balance-sizes'
+
+    minus = 'resize smart -10'
+    equal = 'resize smart +10'
+
+    # See: https://nikitabobko.github.io/AeroSpace/commands#resize
+    shift-h = 'resize width -50'
+    shift-j = 'resize height +50'
+    shift-k = 'resize height -50'
+    shift-l = 'resize width +50'
+    shift-b = 'balance-sizes'
+
+    shift-minus = 'resize smart -50'
+    shift-equal = 'resize smart +50'
+
+    enter = 'mode main'
+    esc = 'mode main'
+
+    [[on-window-detected]]
+    if.app-id = 'net.kovidgoyal.kitty'
+    run = 'move-node-to-workspace 1'
+
+    [[on-window-detected]]
+    if.app-id = 'com.tinyspeck.slackmacgap'
+    run = 'move-node-to-workspace 2'
+
+    [[on-window-detected]]
+    if.app-id = 'com.microsoft.Outlook'
+    run = 'move-node-to-workspace 3'
+
+    [[on-window-detected]]
+    if.app-id = 'com.microsoft.teams2'
+    run = 'move-node-to-workspace 3'
+
+    [[on-window-detected]]
+    if.app-id = 'com.spotify.client'
+    run = 'move-node-to-workspace 9'
+
+    [[on-window-detected]]
+    if.app-id = 'com.apple.MobileSMS'
+    run = 'move-node-to-workspace 8'
   '';
 }
