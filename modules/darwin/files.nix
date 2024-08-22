@@ -210,7 +210,7 @@ in {
 
     [[on-window-detected]]
     if.app-id = 'com.tinyspeck.slackmacgap'
-    run = 'move-node-to-workspace 2'
+    run = 'move-node-to-workspace 1'
 
     [[on-window-detected]]
     if.app-id = 'com.microsoft.Outlook'
