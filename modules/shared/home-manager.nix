@@ -178,7 +178,7 @@ in {
     enable = true;
     font.name = "FiraCode Nerd Font Mono";
     font.size = 15;
-    theme = "Catppuccin-Mocha";
+    themeFile= "Catppuccin-Mocha";
     extraConfig = ''
       background_opacity 0.85
       hide_window_decorations titlebar-and-corners
