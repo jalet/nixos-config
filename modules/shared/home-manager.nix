@@ -16,9 +16,13 @@ in {
     oh-my-zsh = {
       enable = true;
       plugins = [
+        "aws"
+        "fzf"
+        "gh"
         "git"
-        "terraform"
+        "github"
         "sudo"
+        "terraform"
       ];
     };
 
@@ -75,6 +79,27 @@ in {
         batdiff
         batman
         ;
+    };
+  };
+
+  fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    enableBashIntegration = false;
+    colors = {
+      "bg"= "#1e1e2e";
+      "bg+" = "#313244";
+      "fg" = "#cdd6f4";
+      "fg+" = "#cdd6f4";
+      "header" = "#f38ba8";
+      "hl"= "#f38ba8";
+      "hl+" = "#f38ba8";
+      "info" = "#cba6f7";
+      "marker" = "#b4befe";
+      "pointer" = "#f5e0dc";
+      "prompt" = "#cba6f7";
+      "selected-bg" = "#45475a";
+      "spinner"= "#f5e0dc";
     };
   };
 
@@ -189,14 +214,19 @@ in {
 
   tmux = {
     enable = true;
+    terminal = "tmux-256color";
+    shell = "${pkgs.zsh}/bin/zsh";
+    keyMode = "vi";
+    clock24 = true;
+    baseIndex = 0;
     extraConfig = ''
-      set -g default-terminal "tmux-256color"
       set -ag terminal-overrides ",xterm-256color:RGB"
     '';
     plugins = with pkgs.tmuxPlugins; [
       sensible
       resurrect
       yank
+      tmux-fzf
       {
         plugin = catppuccin;
         extraConfig = ''

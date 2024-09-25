@@ -7,6 +7,8 @@ with pkgs; [
   coreutils
   eza
   fd
+  fzf
+  fzf-zsh
   kitty
   kitty-themes
   neofetch
