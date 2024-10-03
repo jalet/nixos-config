@@ -67,7 +67,7 @@ in {
     {path = "${pkgs.alacritty}/Applications/Alacritty.app/";}
     {path = "${pkgs.kitty}/Applications/Kitty.app/";}
     {path = "/Applications/Microsoft Outlook.app/";}
-    {path = "/Applications/Brave Browser.app/";}
+    {path = "/Applications/Safari.app/";}
     {path = "/Applications/Spotify.app/";}
   ];
 }

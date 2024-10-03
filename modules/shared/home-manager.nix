@@ -238,7 +238,7 @@ in {
 
   oh-my-posh = {
     enable = true;
-    enableBashIntegration = true;
+    enableZshIntegration = true;
     settings = builtins.fromTOML(''
       "$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
       final_space = true

@@ -17,6 +17,7 @@ with pkgs; [
   open-policy-agent
   openssh
   qemu
+  watch
   wget
   zip
 
