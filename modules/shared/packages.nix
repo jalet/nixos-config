@@ -45,7 +45,7 @@ with pkgs; [
   # Languages, LSPs and Formatters
   alejandra
   cargo
-  go_1_21
+  go_1_23
   jdk22
   lua
   luarocks

@@ -50,6 +50,7 @@ in {
 
       # Podman
       export DOCKER_HOST='unix:///Users/${user}/.local/share/containers/podman/machine/qemu/podman.sock'
+      export DOCKER_HOSTT='unix:///${pkgs.podman}/'
 
       export PATH=$PATH:$HOME/.cargo/bin
       export PATH=$PATH:/opt/homebrew/bin
