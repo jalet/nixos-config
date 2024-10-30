@@ -16,7 +16,13 @@
       pulse.enable = true;
     };
 
-    rtkit.enable = true;
+    displayManager = {
+      sddm = {
+        wayland = {
+          enable = true;
+        };
+      };
+    };
 
     xserver = {
       enable = true;
@@ -24,9 +30,6 @@
         layout = "us";
         variant = "";
       };
-
-      displayManager.sddm.wayland.enable = true;
-      displayManager.sddm.catppuccin.enable = true;
     };
   };
 }

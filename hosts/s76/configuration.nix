@@ -21,6 +21,7 @@
       ./includes/nix.nix
       ./includes/nixpkgs.nix
       ./includes/security.nix
+      ./includes/services.nix
       ./includes/users.nix
     ];
 

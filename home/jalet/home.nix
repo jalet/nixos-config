@@ -49,7 +49,7 @@ in
 
   gtk = {
     enable = true;
-    catppucin = {
+    catppuccin = {
       enable = true;
     };
   };
@@ -64,6 +64,21 @@ in
       enableSshSupport = true;
       enableScDaemon = true;
       enableZshIntegration = true;
+    };
+
+    hyprpaper = {
+      enable = true;
+      package = pkgs.hyprpaper;
+      settings = {
+        preload = [
+          "${homeDirectory}/nixcfg/wallpapers/lonely-fish.png"
+          "${homeDirectory}/nixcfg/wallpapers/wallhaven-sxzm3l.png"
+        ];
+
+        wallpaper = [
+          "HDMI-A-1, ${homeDirectory}/nixcfg/wallpapers/wallhaven-sxzm3l.png"
+        ];
+      };
     };
   };
 
@@ -233,4 +248,3 @@ in
     '';
   };
 }
-

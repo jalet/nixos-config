@@ -7,5 +7,8 @@
     git
     gnumake
     neovim
+    hypridle
+    hyprpaper
+    hyprlock
   ];
 }
