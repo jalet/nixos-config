@@ -49,9 +49,6 @@ in
 
   gtk = {
     enable = true;
-    catppuccin = {
-      enable = true;
-    };
   };
 
   services = {

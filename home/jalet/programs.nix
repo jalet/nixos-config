@@ -1,5 +1,13 @@
 { pkgs, userName, userEmail }:
 {
+  dconf = {
+    enable = true;
+    settings = {
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+      };
+    };
+  };
 
   hyprlock = {
     enable = true;
@@ -172,8 +180,8 @@
         layer = "top";
         position = "top";
         modules-left = [ "hyprland/workspaces" ];
-        modules-center = [ ];
-        modules-right = [ "pulseaudio" "clock" "custom/lock" "tray" ];
+        modules-center = [ "tray" ];
+        modules-right = [ "pulseaudio" "clock" "custom/lock" ];
         "hyprland/workspaces" = {
           disable-scroll = true;
           sort-by-name = true;
@@ -209,5 +217,27 @@
         };
       }
     ];
+  };
+
+  firefox = {
+    enable = true;
+    languagePacks = [ "se" "en-US" ];
+    policies = {
+      DisableTlemetry = true;
+      DisableFirefoxStudies = true;
+      EnableTrackingProtection = {
+        Value = true;
+        Locked = true;
+        Cryptomining = true;
+        Fingreprinting = true;
+      };
+    };
+    profiles = {
+      me = {
+        settings = {
+          "browser.startup.homepage" = "https://nixos.org";
+        };
+      };
+    };
   };
 }

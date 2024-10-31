@@ -27,8 +27,6 @@
 
 
   programs = {
-    dconf.enable = true;
-
     hyprland = {
       enable = true;
       xwayland = {

@@ -3,7 +3,7 @@
   users.users.jalet = {
     isNormalUser = true;
     description = "Joakim Jarsater";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" ];
 
     openssh = {
       authorizedKeys = {

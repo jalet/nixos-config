@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   services = {
     openssh = {
@@ -18,6 +18,9 @@
 
     displayManager = {
       sddm = {
+        package = pkgs.kdePackages.sddm;
+        enable = true;
+        theme = "catppuccin-mocha";
         wayland = {
           enable = true;
         };

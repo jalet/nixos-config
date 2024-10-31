@@ -15,6 +15,7 @@ with pkgs; [
   oh-my-posh
   openssh
   qemu
+  slack
   wget
   zip
 
