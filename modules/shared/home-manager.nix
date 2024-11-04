@@ -215,7 +215,6 @@ in {
   };
 
   kitty = {
-      package = pkgs.kitty;
     enable = true;
     font.name = "FiraCode Nerd Font Mono";
     font.size = 15;
