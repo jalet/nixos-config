@@ -8,8 +8,8 @@
     openssh = {
       authorizedKeys = {
         keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINB8cSXjtIYTScYsrqHVQXxcIoEoRgSjycs9iCedKx9L cardno:12_763_134"
-          "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMQSvyIRlRjOcpLVEo2expW39hqZgOsQW9EjRH6APo8KPzeDgP74NQAZaWwaU0qUOVV3pioMGb7X/UoMyw619V4= cardno:12_763_134"
+          "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIH9bEM4DbK2B5zSnVahMw+RdyHmyokVzGgDRxyh0B6SpAAAABnNzaDptZQ== ssh:me" # YubiKey 5Ci FIPS (me)
+          "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIGe3FuAf6BN0Zr3aUEa/wIQ2S3vQuZ8ihGRqCs2/HiHnAAAABnNzaDptZQ== ssh:me" # YubiKey 5C (me)
         ];
       };
     };

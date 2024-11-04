@@ -1,14 +1,5 @@
 { pkgs, userName, userEmail }:
 {
-  dconf = {
-    enable = true;
-    settings = {
-      "org/gnome/desktop/interface" = {
-        color-scheme = "prefer-dark";
-      };
-    };
-  };
-
   hyprlock = {
     enable = true;
     package = pkgs.hyprlock;

@@ -1,11 +1,17 @@
 { pkgs, ... }:
 {
   services = {
+    pcscd = {
+      enable = true;
+    };
+
     openssh = {
       enable = true;
-      allowSFTP = true;
+      allowSFTP = false;
       settings = {
         PermitRootLogin = "no";
+        PasswordAuthentication = false;
+        UsePAM = false;
       };
     };
 

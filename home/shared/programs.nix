@@ -94,13 +94,6 @@
     };
   };
 
-  gpg = {
-    enable = true;
-    scdaemonSettings = {
-      disable-ccid = true;
-    };
-  };
-
   bat = {
     enable = true;
     config = {

@@ -52,17 +52,6 @@ in
   };
 
   services = {
-    gpg-agent = {
-      enable = true;
-      defaultCacheTtl = 60;
-      defaultCacheTtlSsh = 60;
-      maxCacheTtl = 180;
-      maxCacheTtlSsh = 180;
-      enableSshSupport = true;
-      enableScDaemon = true;
-      enableZshIntegration = true;
-    };
-
     hyprpaper = {
       enable = true;
       package = pkgs.hyprpaper;
