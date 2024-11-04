@@ -17,4 +17,11 @@ in {
         sha256 = "sha256-yHt3oIjUnljARaihalcWSNldtaJfVDfmfiecYfbzGs0=";
       }
       + "/themes/${Mocha}");
+  
+  "${HOME}/.markdownlint.yaml".text = ''
+    --- 
+    default: true
+    MD013:
+      tables: false
+  '';
 }

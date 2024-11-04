@@ -44,9 +44,9 @@ in {
           nix-shell '<nixpkgs>' -A "$1"
       }
 
-      export GPG_TTY="$(tty)"
-      export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-      gpgconf --launch gpg-agent
+      #export GPG_TTY="$(tty)"
+      #export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+      #gpgconf --launch gpg-agent
 
       # Podman
       export DOCKER_HOST='unix:///Users/${user}/.local/share/containers/podman/machine/qemu/podman.sock'
@@ -175,13 +175,27 @@ in {
         editor = "nvim";
         autocrlf = "input";
       };
-      pull.rebase = true;
-      push.autoSetupRemote = true;
-      rebase.autoStash = true;
-    };
-    signing = {
-      key = "0xAB22A52B64CF60D3";
-      signByDefault = true;
+      
+      pull = {
+        rebase = true;
+        autoSetupRemote = true;
+      };
+
+      rebase = {
+        autoStash = true;
+      };
+
+      commit = {
+        gpgsign = true;
+      };
+
+      gpg = {
+        format = "ssh";
+      };
+
+      user = {
+        signingkey = "~/.ssh/id_ed25519_sk_rk_me.pub";
+      };
     };
   };
 
@@ -194,13 +208,14 @@ in {
   };
 
   gpg = {
-    enable = true;
+    enable = false;
     scdaemonSettings = {
       disable-ccid = true;
     };
   };
 
   kitty = {
+      package = pkgs.kitty;
     enable = true;
     font.name = "FiraCode Nerd Font Mono";
     font.size = 15;
