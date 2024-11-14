@@ -51,6 +51,7 @@ in {
       (nerdfonts.override {fonts = ["FiraCode" "Hack"];})
     ];
   };
+
   #services.gpg-agent.enable = true;
   system = {
     stateVersion = 4;

@@ -18,6 +18,7 @@ with pkgs; [
   openssh
   qemu
   watch
+  wezterm
   wget
   zip
 

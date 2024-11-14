@@ -43,18 +43,7 @@ in {
       export HISTIGNORE="pwd:ls:cd"
 
 
-      # nix shortcuts
-      shell() {
-          nix-shell '<nixpkgs>' -A "$1"
-      }
-
-      #export GPG_TTY="$(tty)"
-      #export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-      #gpgconf --launch gpg-agent
-
-      # Podman
-      export DOCKER_HOST='unix:///Users/${user}/.local/share/containers/podman/machine/qemu/podman.sock'
-      export DOCKER_HOSTT='unix:///${pkgs.podman}/'
+      export DOCKER_HOST=unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')
 
       export PATH=$PATH:$HOME/.cargo/bin
       export PATH=$PATH:/opt/homebrew/bin
@@ -232,6 +221,26 @@ in {
       hide_window_decorations titlebar-and-corners
       window_margin_width 5 5 10 5
       tab_bar_style powerline
+    '';
+  };
+
+  wezterm = {
+    enable = true;
+    enableBashIntegration = true;
+    enableZshIntegration = true;
+
+    extraConfig = ''
+      return {
+        color_scheme = "catppuccin-mocha";
+        default_prog = { "zsh", "--login", "-c", "tmux attach -t dev || tmux new -s dev" };
+        enable_tab_bar = false;
+        font = wezterm.font("FiraCode Nerd Font Mono");
+        font_size = 14;
+        front_end = "WebGpu";
+        macos_window_background_blur = 20;
+        window_background_opacity = 0.9;
+        window_decorations = "RESIZE";
+      }
     '';
   };
 
