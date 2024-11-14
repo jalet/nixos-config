@@ -46,7 +46,6 @@ with pkgs; [
   alejandra
   cargo
   go_1_23
-  jdk22
   lua
   luarocks
   nodejs_22

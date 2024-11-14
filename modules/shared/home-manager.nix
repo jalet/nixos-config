@@ -16,11 +16,15 @@ in {
     oh-my-zsh = {
       enable = true;
       plugins = [
+        "tmux"
         "aws"
+        "docker"
         "fzf"
         "gh"
         "git"
         "github"
+        "podman"
+        "ssh-agent"
         "sudo"
         "terraform"
       ];
@@ -181,6 +185,10 @@ in {
         autoSetupRemote = true;
       };
 
+      push = {
+        autoSetupRemote = true;
+      };
+
       rebase = {
         autoStash = true;
       };
@@ -230,11 +238,12 @@ in {
   tmux = {
     enable = true;
     terminal = "tmux-256color";
-    shell = "${pkgs.zsh}/bin/zsh";
     keyMode = "vi";
     clock24 = true;
     baseIndex = 0;
+    shell = "$SHELL";
     extraConfig = ''
+      set-option -g default-command zsh
       set -ag terminal-overrides ",xterm-256color:RGB"
     '';
     plugins = with pkgs.tmuxPlugins; [
@@ -318,10 +327,5 @@ in {
         template = ""
         type = "text"
     '');
-  };
-
-  java = {
-    enable = true;
-    package = pkgs.jdk22;
   };
 }
