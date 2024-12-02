@@ -48,7 +48,8 @@ in {
 
   fonts = {
     packages = with pkgs; [
-      (nerdfonts.override {fonts = ["FiraCode" "Hack"];})
+      nerd-fonts.fira-code
+      nerd-fonts.fira-mono
     ];
   };
 

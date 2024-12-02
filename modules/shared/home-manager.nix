@@ -254,12 +254,6 @@ in {
     extraConfig = ''
       set-option -g default-command zsh
       set -ag terminal-overrides ",xterm-256color:RGB"
-      set -g pane-border-status top
-      set -g pane-border-format " #{pane_index} : #{pane_title} : #{pane_current_path} "
-
-      ## Catppuccin
-      set -oqg @catppuccin_window_text "#W"
-      set -oqg @catppuccin_window_current_text "#W"
     '';
     plugins = with pkgs.tmuxPlugins; [
       sensible
@@ -270,6 +264,8 @@ in {
         plugin = catppuccin;
         extraConfig = ''
           set -g @catppuccin_flavour 'mocha'
+          set -oqg @catppuccin_window_text "#W"
+          set -oqg @catppuccin_window_current_text "#W"
         '';
       }
     ];
