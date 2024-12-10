@@ -62,10 +62,9 @@ in {
   # Fully declarative dock using the latest from Nix Store
   local.dock.enable = true;
   local.dock.entries = [
+    {path = "${pkgs.wezterm}/Applications/WezTerm.app/";}
     {path = "/Applications/Slack.app/";}
     {path = "/System/Applications/Messages.app/";}
-    {path = "${pkgs.alacritty}/Applications/Alacritty.app/";}
-    {path = "${pkgs.kitty}/Applications/Kitty.app/";}
     {path = "/Applications/Microsoft Outlook.app/";}
     {path = "/Applications/Safari.app/";}
     {path = "/Applications/Spotify.app/";}
