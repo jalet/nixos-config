@@ -24,4 +24,12 @@ in {
     MD013:
       tables: false
   '';
+
+  "${HOME}/.config/ghostty/config".text = ''
+    background-opacity = 0.9
+    font-family = "Hack Nerd Font Mono"
+    font-size = 16
+    theme = catppuccin-mocha
+    window-padding-x = 5
+  '';
 }

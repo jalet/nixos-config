@@ -27,18 +27,22 @@
       url = "github:nikitabobko/homebrew-tap";
       flake = false;
     };
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+    };
   };
 
   outputs = {
-    self,
     darwin,
-    nix-homebrew,
-    homebrew-bundle,
-    homebrew-core,
-    homebrew-cask,
-    nikitabobko-tap,
+    ghostty,
     home-manager,
+    homebrew-bundle,
+    homebrew-cask,
+    homebrew-core,
+    nikitabobko-tap,
+    nix-homebrew,
     nixpkgs,
+    self,
   } @ inputs: let
     user = "jj";
     linuxSystems = ["x86_64-linux" "aarch64-linux"];
