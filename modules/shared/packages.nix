@@ -4,6 +4,7 @@ with pkgs; [
   awscli2
   bash-completion
   bat
+  btop
   coreutils
   eza
   fd

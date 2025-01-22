@@ -3,8 +3,7 @@
   ...
 }: let
   name = "Joakim Jarsäter";
-  user = "jj";
-  email = "j@jarsater.com";
+  email = "joakim@jarsater.com";
 in {
   # Shared shell configuration
   zsh = {
@@ -24,7 +23,6 @@ in {
         "git"
         "github"
         "podman"
-        "ssh-agent"
         "sudo"
         "terraform"
       ];
@@ -47,6 +45,11 @@ in {
 
       export PATH=$PATH:$HOME/.cargo/bin
       export PATH=$PATH:/opt/homebrew/bin
+
+      export GPG_TTY="$(tty)"
+      export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+      gpgconf --launch gpg-agent
+      gpg-connect-agent updatestartuptty /bye > /dev/null
     '';
 
     shellAliases = {
@@ -86,6 +89,7 @@ in {
     enable = true;
     userName = name;
     userEmail = email;
+
     ignores = [
       # -- Compiled source ----------------------------------------------------------
       "*.com"
@@ -141,14 +145,19 @@ in {
       "spell/"
       ".factorypath"
     ];
+
     aliases = {
       st = "status";
       ls = "ls-files";
       co = "checkout";
       cob = "checkout -b";
     };
+
     extraConfig = {
-      init.defaultBranch = "main";
+      init = {
+        defaultBranch = "main";
+      };
+
       core = {
         editor = "nvim";
         autocrlf = "input";
@@ -171,12 +180,12 @@ in {
         gpgsign = true;
       };
 
-      gpg = {
-        format = "ssh";
+      tag = {
+        gpgSign = true;
       };
 
       user = {
-        signingkey = "~/.ssh/id_ed25519_sk_rk_me.pub";
+        signingkey = "0x4EE738F142BF5D51";
       };
     };
   };

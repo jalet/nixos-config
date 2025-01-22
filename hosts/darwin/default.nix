@@ -53,7 +53,6 @@ in {
     ];
   };
 
-  #services.gpg-agent.enable = true;
   system = {
     stateVersion = 4;
 
