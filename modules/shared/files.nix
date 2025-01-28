@@ -32,4 +32,31 @@ in {
     theme = GruvboxDark 
     window-padding-x = 5
   '';
+
+  "${HOME}/.editodconfig".text = ''
+    # EditorConfig is awesome: https://EditorConfig.org
+
+    # top-most EditorConfig file
+    root = true
+
+    # Unix-style newlines with a newline ending every file
+    [*]
+    end_of_line = lf
+    insert_final_newline = true
+    charset = utf-8
+
+    # 4 space indentation
+    [*.py]
+    indent_style = space
+    indent_size = 4
+
+    # Tab indentation (no size specified)
+    [Makefile]
+    indent_style = tab
+  '';
+
+  "${HOME}/.config/git/allowed-signers".text = ''
+    j@jarsater.com valid-before="20250124" sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIP6Za2Rait6hAZYgHkL1oTR5A4mnupddtODneWfqw6JzAAAABnNzaDpwZw== ssh:pg 
+    j@jarsater.com valid-before="20250124" sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIGe3FuAf6BN0Zr3aUEa/wIQ2S3vQuZ8ihGRqCs2/HiHnAAAABnNzaDptZQ== ssh:me
+  '';
 }

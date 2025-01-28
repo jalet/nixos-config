@@ -187,6 +187,21 @@ in {
       user = {
         signingkey = "0x4EE738F142BF5D51";
       };
+
+      gpg = {
+        ssh = {
+          allowedSignersFile = "~/.config/git/allowed-signers";
+        };
+      };
+
+      format = {
+        pretty = "format:%C(Yellow)%h %G?  %C(reset)%ad (%C(Green)%cr%C(reset))%x09 %C(Cyan)%an: %C(reset)%s";
+      };
+
+      log = {
+        dateOrder = true;
+        graph = true;
+      };
     };
   };
 
@@ -338,5 +353,16 @@ in {
   "console_title_template": "{{if .Root}} \u26a1 {{end}}{{.Folder | replace \"~\" \"🏚\" }} @ {{.HostName}}",
   "version": 3
 }'');
+  };
+
+  ssh = {
+    enable = true;
+    matchBlocks = {
+      "*" = {
+        setEnv = {
+          TERM = "xterm-256color";
+        };
+      };
+    };
   };
 }
