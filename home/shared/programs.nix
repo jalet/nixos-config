@@ -1,8 +1,27 @@
-{ pkgs, userName, userEmail, ... }:
+{ pkgs, lib, userName, userEmail, ... }:
 {
 
   # Let Home Manager install and manage itself.
   home-manager.enable = true;
+
+  gpg = {
+    enable = true;
+
+    scdaemonSettings = {
+      disable-ccid = true;
+    };
+
+    package = pkgs.gnupg.override {
+      pcsclite = pkgs.pcsclite.overrideAttrs
+        (old: {
+          postPatch = old.postPatch + (lib.optionalString (!(lib.strings.hasInfix ''--replace-fail "libpcsclite_real.so.1"'' old.postPatch)) ''
+            substituteInPlace src/libredirect.c src/spy/libpcscspy.c \
+              --replace-fail "libpcsclite_real.so.1" "$lib/lib/libpcsclite_real.so.1"
+          '');
+        });
+    };
+  };
+
 
   # Git settings
   git = {
@@ -94,10 +113,31 @@
     };
   };
 
+  tmux = {
+    enable = true;
+    terminal = "tmux-256color";
+    keyMode = "vi";
+    clock24 = true;
+    baseIndex = 0;
+    shell = "$SHELL";
+    extraConfig = ''
+      set-option -g default-command zsh
+      set -ag terminal-overrides ",xterm-256color:RGB"
+    '';
+    plugins = with pkgs.tmuxPlugins; [
+      sensible
+      resurrect
+      yank
+      tmux-fzf
+      gruvbox
+    ];
+  };
+
   bat = {
     enable = true;
     config = {
       style = "numbers,changes,header";
+      theme = "gruvbox-dark";
     };
     extraPackages = builtins.attrValues {
       inherit
@@ -109,42 +149,11 @@
     };
   };
 
-  kitty = {
-    enable = true;
-    font.name = "FiraCode Nerd Font Mono";
-    font.size = 15;
-    extraConfig = ''
-      background_opacity 0.85
-      hide_window_decorations titlebar-and-corners
-      window_margin_width 5 5 10 5
-      tab_bar_style powerline
-    '';
-  };
-
-  tmux = {
-    enable = true;
-    terminal = "tmux-256color";
-    shell = "${pkgs.zsh}/bin/zsh";
-    keyMode = "vi";
-    clock24 = true;
-    baseIndex = 0;
-    extraConfig = ''
-      set -ag terminal-overrides ",xterm-256color:RGB"
-    '';
-    plugins = with pkgs.tmuxPlugins; [
-      sensible
-      resurrect
-      yank
-      tmux-fzf
-    ];
-  };
-
   fzf = {
     enable = true;
     enableZshIntegration = true;
-    enableBashIntegration = false;
+    enableBashIntegration = true;
   };
-
 
   zsh = {
     enable = true;
@@ -160,6 +169,7 @@
         "gh"
         "git"
         "github"
+        "kubectl"
         "sudo"
         "terraform"
       ];
@@ -179,71 +189,117 @@
   oh-my-posh = {
     enable = true;
     enableZshIntegration = true;
-    settings = builtins.fromTOML (
-      ''
-        "$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
-        final_space = true
-        version = 2
-        disable_notice = true
-    
-        [palette]
-        os = "#ACB0BE"
-        closer = "p:os"
-        pink = "#F5C2E7"
-        lavender = "#B4BEFE"
-        blue = "#89B4FA"
-    
-        [[blocks]]
-        alignment = "left"
-        type = "prompt"
-    
-          [[blocks.segments]]
-          foreground = "p:os"
-          style = "plain"
-          template = "λ "
-          type = "text"
-    
-          [[blocks.segments]]
-          foreground = "p:blue"
-          style = "plain"
-          template = "{{ .UserName }} "
-          type = "session"
-    
-          [[blocks.segments]]
-          foreground = "p:pink"
-          style = "plain"
-          template = "{{ .Path }} "
-          type = "path"
-    
-            [blocks.segments.properties]
-            folder_icon = "...."
-            home_icon = "~"
-            style = "agnoster_short"
-    
-          [[blocks.segments]]
-          foreground = "p:lavender"
-          template = "{{ .HEAD }} "
-          style = "plain"
-          type = "git"
-    
-            [blocks.segments.properties]
-            branch_icon = " "
-            cherry_pick_icon = " "
-            commit_icon = " "
-            fetch_status = false
-            fetch_upstream_icon = false
-            merge_icon = " "
-            no_commits_icon = " "
-            rebase_icon = " "
-            revert_icon = " "
-            tag_icon = " "
-    
-          [[blocks.segments]]
-          style = "plain"
-          foreground = "p:closer"
-          template = ""
-          type = "text"
-      ''
+    settings = builtins.fromJSON (
+      ''{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "alignment": "left",
+      "segments": [
+        {
+          "background": "#3a3a3a",
+          "foreground": "#d65d0e",
+          "style": "plain",
+          "template": "\u26a1 ",
+          "type": "root"
+        },
+        {
+          "background": "transparent",
+          "foreground": "#d65d0e",
+          "style": "plain",
+          "template": "{{ if .WSL }}WSL at {{ end }}{{.Icon}} ",
+          "type": "os"
+        },
+        {
+          "background": "#665c54",
+          "foreground": "#d5c4a1",
+          "leading_diamond": "<transparent,#665c54>\ue0b0</>",
+          "properties": {
+            "folder_icon": "...",
+            "folder_separator_icon": "<transparent> \ue0bd </>",
+            "home_icon": "\ueb06",
+            "style": "agnoster_short"
+          },
+          "style": "diamond",
+          "template": " {{ .Path }} ",
+          "trailing_diamond": "\ue0b0",
+          "type": "path"
+        },
+        {
+          "background": "#665c54",
+          "background_templates": [
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}#d3869b{{ end }}",
+            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#83a598{{ end }}"
+          ],
+          "foreground": "#d5c4a1",
+          "powerline_symbol": "\ue0b0",
+          "properties": {
+            "fetch_status": true
+          },
+          "style": "powerline",
+          "template": " {{ .HEAD }}{{ if .Staging.Changed }}<#FF6F00> \uf046 {{ .Staging.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if gt .StashCount 0 }} \ueb4b {{ .StashCount }}{{ end }} ",
+          "type": "git"
+        },
+        {
+          "background": "#910000",
+          "foreground": "#d5c4a1",
+          "powerline_symbol": "\ue0b0",
+          "style": "powerline",
+          "template": "<transparent> \uf12a</> {{ reason .Code }} ",
+          "type": "status"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "alignment": "right",
+      "segments": [
+        {
+          "background": "#665c54",
+          "foreground": "#d5c4a1",
+          "leading_diamond": "\ue0ba",
+          "trailing_diamond": "\ue0bc",
+          "style": "diamond",
+          "template": "  {{ .UserName }}<transparent> / </>{{ .HostName }} ",
+          "type": "session"
+        },
+        {
+          "background": "transparent",
+          "foreground": "#d65d0e",
+          "properties": {
+            "time_format": "15:04:05"
+          },
+          "leading_diamond": "\ue0ba",
+          "style": "diamond",
+          "template": " {{ .CurrentDate | date .Format }} ",
+          "type": "time"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "foreground": "#d5c4a1",
+          "foreground_templates": [
+            "{{ if gt .Code 0 }}#ff0000{{ end }}"
+          ],
+          "properties": {
+            "always_enabled": true
+          },
+          "style": "plain",
+          "template": "\u276f ",
+          "type": "status"
+        }
+      ],
+      "type": "prompt"
+    }
+  ],
+  "console_title_template": "{{if .Root}} \u26a1 {{end}}{{.Folder | replace \"~\" \"🏚\" }} @ {{.HostName}}",
+  "version": 3
+}''
     );
   };
 }

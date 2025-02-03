@@ -26,4 +26,5 @@
     [{ device = "/dev/disk/by-uuid/d7b7c04c-b47b-4f1c-b0b8-325f63ddb206"; }];
 
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.gpgSmartcards.enable = true;
 }

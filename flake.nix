@@ -15,8 +15,6 @@
       url = "git+https://github.com/jalet/nvim.git";
       flake = false;
     };
-
-    catppuccin.url = "github:catppuccin/nix";
   };
 
   outputs =
@@ -24,7 +22,6 @@
     , home-manager
     , nixpkgs
     , jalet-nvim
-    , catppuccin
     , ...
     } @ inputs:
     let
@@ -46,7 +43,6 @@
         s76 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            catppuccin.nixosModules.catppuccin
             home-manager.nixosModules.home-manager
             {
               home-manager = {
@@ -54,7 +50,7 @@
                 useUserPackages = true;
                 extraSpecialArgs = { inherit inputs outputs; };
                 backupFileExtension = "hmbackup";
-                users.jalet = import ./home/jalet { inherit catppuccin; };
+                users.jalet = import ./home/jalet;
               };
             }
             ./hosts/s76

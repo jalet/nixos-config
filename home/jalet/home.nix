@@ -1,4 +1,4 @@
-{ catppucin, config, inputs, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 let
   userName = "jalet";
   userEmail = "joakim@jarsater.com";
@@ -6,7 +6,7 @@ let
 
   sharedFiles = import ../shared/files.nix { inherit config pkgs lib homeDirectory inputs; };
   sharedPackages = import ../shared/packages.nix { inherit pkgs; };
-  sharedPrograms = import ../shared/programs.nix { inherit pkgs userName userEmail; };
+  sharedPrograms = import ../shared/programs.nix { inherit pkgs lib userName userEmail; };
 in
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -40,12 +40,6 @@ in
   };
 
   programs = lib.recursiveUpdate sharedPrograms (import ./programs.nix { inherit pkgs userName userEmail; });
-
-
-  catppuccin = {
-    enable = true;
-    flavor = "mocha";
-  };
 
   gtk = {
     enable = true;
@@ -158,7 +152,7 @@ in
 
       # See https://wiki.hyprland.org/Configuring/Keywords/
       "$mainMod" = "SUPER"; # Sets "Windows" key as main modifier
-      "$terminal" = "kitty";
+      "$terminal" = "ghostty";
       "$fileManager" = "dolphin";
       "$menu" = "wofi --show drun";
 
@@ -221,7 +215,7 @@ in
 
     extraConfig = ''
       # See https://wiki.hyprland.org/Configuring/Monitors/
-      monitor=,preferred,auto,auto
+      monitor=,preferred, 0x0, 1 
       
       
       ###################

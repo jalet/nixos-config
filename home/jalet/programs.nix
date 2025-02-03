@@ -3,10 +3,6 @@
   hyprlock = {
     enable = true;
     package = pkgs.hyprlock;
-    catppuccin = {
-      enable = true;
-      flavor = "mocha";
-    };
     extraConfig = ''
       source = $HOME/.config/hypr/mocha.conf
 
@@ -91,11 +87,10 @@
   waybar = {
     enable = true;
     package = pkgs.waybar;
-    catppuccin.enable = true;
     style = ''
       * {
         font-family: Fira Code Nerd Font;
-        font-size: 15px;
+        font-size: 14px;
         min-height: 0;
       }
 
@@ -166,6 +161,7 @@
         border-radius: 1rem;
       }
     '';
+
     settings = [
       {
         layer = "top";

@@ -9,9 +9,8 @@ with pkgs; [
   fd
   fzf
   fzf-zsh
-  kitty
-  kitty-themes
   neofetch
+  oh-my-zsh
   oh-my-posh
   openssh
   qemu
@@ -20,11 +19,10 @@ with pkgs; [
   zip
 
   # Encryption and security tools
-  gnupg
   ssm-session-manager-plugin
   yubikey-agent
   yubikey-manager
-  _1password
+  _1password-cli
   _1password-gui
 
   # Text and terminal utilities

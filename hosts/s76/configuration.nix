@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   time.timeZone = "Europe/Stockholm";
@@ -27,6 +27,8 @@
 
 
   programs = {
+    zsh.enable = true;
+
     dconf = {
       enable = true;
     };
@@ -37,6 +39,15 @@
         enable = true;
       };
     };
+
+    gnupg = {
+      agent = {
+        enable = true;
+        enableSSHSupport = true;
+        pinentryPackage = pkgs.pinentry-curses;
+      };
+    };
+
   };
 
 

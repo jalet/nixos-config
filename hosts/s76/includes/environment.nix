@@ -1,21 +1,30 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
+    # Misc
+    cilium-cli
     coreutils
+    cryptsetup
     curl
     gcc
     git
     gnumake
-    neovim
-    hypridle
-    hyprpaper
+    gnupg
+    gnupg-pkcs11-scd
     hyprlock
-    (catppuccin-sddm.override {
-      flavor = "mocha";
-      font = "Fira Code Nerd Font Mono";
-      fontSize = "12";
-      background = "${../../../wallpapers/wallhaven-sxzm3l.png}";
-      loginBackground = true;
-    })
+    hyprpaper
+    libu2f-host
+    neovim
+    opensc
+    pcsclite
+    pcsctools
+    pinentry-curses
+    pinentry-tty
+    yubikey-personalization
   ];
+
+  environment.shellInit = ''
+    gpg-connect-agent /bye
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+  '';
 }
