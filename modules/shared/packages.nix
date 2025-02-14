@@ -10,9 +10,11 @@ with pkgs; [
   fd
   fzf
   fzf-zsh
+  ipcalc
   kitty
   kitty-themes
   neofetch
+  nmap
   oh-my-posh
   oh-my-zsh
   open-policy-agent

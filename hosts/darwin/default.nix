@@ -13,7 +13,8 @@ in {
   ];
 
   # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  nix.enable = true;
+  ids.gids.nixbld = 350;
 
   # Setup user, packages, programs
   nix = {
@@ -21,7 +22,6 @@ in {
     settings.trusted-users = ["@admin" "''${user}"];
 
     gc = {
-      user = "root";
       automatic = true;
       interval = {
         Weekday = 0;
