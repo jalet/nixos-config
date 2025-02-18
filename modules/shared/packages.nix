@@ -10,6 +10,7 @@ with pkgs; [
   fd
   fzf
   fzf-zsh
+  iftop
   ipcalc
   kitty
   kitty-themes
