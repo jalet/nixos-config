@@ -194,10 +194,6 @@ in {
         };
       };
 
-      format = {
-        pretty = "format:%C(Yellow)%h %G?  %C(reset)%ad (%C(Green)%cr%C(reset))%x09 %C(Cyan)%an: %C(reset)%s";
-      };
-
       log = {
         dateOrder = true;
         graph = true;
