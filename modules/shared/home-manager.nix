@@ -15,16 +15,21 @@ in {
     oh-my-zsh = {
       enable = true;
       plugins = [
+        "sudo"
         "tmux"
         "aws"
-        "docker"
         "fzf"
         "gh"
         "git"
         "github"
+        "docker"
         "podman"
-        "sudo"
         "terraform"
+        # kubernetes
+        "kubectl"
+        "kubectx"
+        "helm"
+        "argocd"
       ];
     };
 

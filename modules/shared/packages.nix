@@ -60,4 +60,13 @@ with pkgs; [
   terraform-ls
   tflint
   tree-sitter
+
+  # kubernetes
+  cilium-cli
+  hubble
+  istioctl
+  k9s
+  kubectl
+  kubectx
+  kubernetes-helm
 ]
