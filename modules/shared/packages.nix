@@ -2,6 +2,7 @@
 with pkgs; [
   # General packages for development and system management
   awscli2
+  awslogs
   bash-completion
   bat
   btop
@@ -49,6 +50,7 @@ with pkgs; [
 
   # Languages, LSPs and Formatters
   alejandra
+  bun
   cargo
   go_1_23
   lua

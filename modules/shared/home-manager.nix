@@ -25,6 +25,7 @@ in {
         "docker"
         "podman"
         "terraform"
+
         # kubernetes
         "kubectl"
         "kubectx"
@@ -41,15 +42,16 @@ in {
 
       # Define variables for directories
       export PATH=$HOME/.local/share/bin:$PATH
+      export PATH=$PATH:$HOME/.cargo/bin
+      export PATH=$PATH:/opt/homebrew/bin
+      export PATH=$PATH:$(go env GOPATH)/bin
+      export PATH=$PATH:$HOME/.npm/bin
 
       # Remove history data we don't want to see
       export HISTIGNORE="pwd:ls:cd"
 
-
       export DOCKER_HOST=unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')
 
-      export PATH=$PATH:$HOME/.cargo/bin
-      export PATH=$PATH:/opt/homebrew/bin
 
       export GPG_TTY="$(tty)"
       export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
