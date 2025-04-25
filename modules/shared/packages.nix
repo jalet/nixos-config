@@ -55,7 +55,7 @@ with pkgs; [
   go_1_23
   lua
   luarocks
-  nodejs_22
+  nodejs_23
   rustc
   terraform
   terraform-docs

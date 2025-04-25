@@ -56,6 +56,7 @@
           nativeBuildInputs = with pkgs; [bashInteractive git];
           shellHook = with pkgs; ''
             export EDITOR=nvim
+            export KUBE_EDITOR=nvim
           '';
         };
     };

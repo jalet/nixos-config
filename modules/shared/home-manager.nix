@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }: let
   name = "Joakim Jarsäter";
@@ -34,7 +35,7 @@ in {
       ];
     };
 
-    initExtraFirst = ''
+    initContent = lib.mkBefore ''
       if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
         . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
@@ -42,10 +43,10 @@ in {
 
       # Define variables for directories
       export PATH=$HOME/.local/share/bin:$PATH
+      export PATH=$PATH:$HOME/.local/npm/bin
       export PATH=$PATH:$HOME/.cargo/bin
-      export PATH=$PATH:/opt/homebrew/bin
       export PATH=$PATH:$(go env GOPATH)/bin
-      export PATH=$PATH:$HOME/.npm/bin
+      export PATH=$PATH:/opt/homebrew/bin
 
       # Remove history data we don't want to see
       export HISTIGNORE="pwd:ls:cd"

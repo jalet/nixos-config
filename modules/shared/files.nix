@@ -17,7 +17,13 @@ in {
         sha256 = "sha256-yHt3oIjUnljARaihalcWSNldtaJfVDfmfiecYfbzGs0=";
       }
       + "/themes/${Mocha}");
-  
+
+  "${HOME}/.npmrc".text = ''
+    # npmrc
+    cache=${HOME}/.cache/npm
+    prefix=${HOME}/.local/npm
+  '';
+
   "${HOME}/.markdownlint.yaml".text = ''
     --- 
     default: true

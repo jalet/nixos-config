@@ -25,12 +25,6 @@ in {
   homebrew = {
     enable = true;
     casks = pkgs.callPackage ./casks.nix {};
-
-    masApps = {
-      "Microsoft Outlook" = 985367838;
-      "Slack for desktop" = 803453959;
-      "OneDrive" = 823766827; 
-    };
   };
 
   # Enable home-manager
@@ -60,12 +54,5 @@ in {
   };
 
   # Fully declarative dock using the latest from Nix Store
-  local.dock.enable = true;
-  local.dock.entries = [
-    {path = "/Applications/Slack.app/";}
-    {path = "/System/Applications/Messages.app/";}
-    {path = "/Applications/Microsoft Outlook.app/";}
-    {path = "/Applications/Safari.app/";}
-    {path = "/Applications/Spotify.app/";}
-  ];
+  local.dock.enable = false;
 }
