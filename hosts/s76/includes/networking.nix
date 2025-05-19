@@ -1,4 +1,28 @@
 { config, lib, ... }:
+let
+  vlans = [
+    { id = 10; network = "10.10.10"; hosts = [ ]; }
+    { id = 20; network = "10.10.20"; hosts = [ 200 201 202 203 204 205 206 207 208 209 ]; }
+    { id = 30; network = "10.10.30"; hosts = [ ]; }
+    { id = 99; network = "10.10.99"; hosts = [ 200 ]; }
+  ];
+
+  makeInterface = v: {
+    name = "vlan${toString v.id}";
+    value = {
+      useDHCP = false;
+      ipv4.addresses = (map
+        (h: {
+          address = "${v.network}.${toString h}";
+          prefixLength = 24;
+        })
+        v.hosts)
+      ++ [
+        { address = "${v.network}.254"; prefixLength = 24; } # Used for DNS server in each VLAN
+      ];
+    };
+  };
+in
 {
   networking = {
     useDHCP = lib.mkDefault true;
@@ -35,51 +59,12 @@
       };
     };
 
-
     interfaces = {
       enp86s0.useDHCP = false;
       br0.useDHCP = false;
-
-      vlan10 = {
-        useDHCP = false;
-        ipv4 = {
-          addresses = [
-            { address = "10.10.10.200"; prefixLength = 24; }
-            { address = "10.10.10.254"; prefixLength = 24; }
-          ];
-        };
-      };
-
-      vlan20 = {
-        useDHCP = false;
-        ipv4 = {
-          addresses = [
-            { address = "10.10.20.200"; prefixLength = 24; }
-            { address = "10.10.20.254"; prefixLength = 24; }
-          ];
-        };
-      };
-
-      vlan30 = {
-        useDHCP = false;
-        ipv4 = {
-          addresses = [
-            { address = "10.10.30.200"; prefixLength = 24; }
-            { address = "10.10.30.254"; prefixLength = 24; }
-          ];
-        };
-      };
-
-      vlan99 = {
-        useDHCP = false;
-        ipv4 = {
-          addresses = [
-            { address = "10.10.99.200"; prefixLength = 24; }
-            { address = "10.10.99.254"; prefixLength = 24; }
-          ];
-        };
-      };
-    };
+    } // builtins.listToAttrs (
+      map makeInterface vlans
+    );
 
     networkmanager = {
       enable = true;
