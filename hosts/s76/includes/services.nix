@@ -6,17 +6,24 @@
       enable = true;
       role = "server";
       extraFlags = toString [
-        # For kubectl management
-        "--tls-san=v20.home.local"
-        "--write-kubeconfig-mode=640"
-        "--write-kubeconfig-group=k3s"
+        "--cluster-init"
 
-        # disable stuff
-        "--disable=traefik"
+        "--node-ip=10.10.99.200"
+        "--advertise-address=10.10.99.200"
 
-        # Use Cilium instead
+        "--cluster-cidr=172.16.0.0/16" # Define pod network range
+        "--service-cidr=172.17.0.0/16" # Define service network range
+
+        "--disable=flannel"
+        "--disable-helm-controller"
+        "--disable-kube-proxy"
+        "--disable-cloud-controller"
         "--disable-network-policy"
+        "--disable=servicelb"
+        "--disable=traefik"
         "--flannel-backend=none"
+        "--secrets-encryption"
+        "--write-kubeconfig-mode=644"
       ];
     };
 
@@ -41,14 +48,8 @@
       pulse.enable = true;
     };
 
-    displayManager = {
-      sddm = {
-        package = pkgs.kdePackages.sddm;
-        enable = true;
-        wayland = {
-          enable = true;
-        };
-      };
+    pulseaudio = {
+      enable = false;
     };
 
     udev = {

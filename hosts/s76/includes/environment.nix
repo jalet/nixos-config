@@ -2,7 +2,6 @@
 {
   environment.systemPackages = with pkgs; [
     # Misc
-    cilium-cli
     coreutils
     cryptsetup
     curl
@@ -11,8 +10,6 @@
     gnumake
     gnupg
     gnupg-pkcs11-scd
-    hyprlock
-    hyprpaper
     libu2f-host
     neovim
     opensc
@@ -20,11 +17,18 @@
     pcsctools
     pinentry-curses
     pinentry-tty
+    python314
     yubikey-personalization
+
+    # k8s
+    cilium-cli
+    istioctl
+    kubernetes-helm
   ];
 
   environment.shellInit = ''
     gpg-connect-agent /bye
     export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    export KUBECONFIG=$HOME/.kube/config
   '';
 }

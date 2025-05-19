@@ -1,6 +1,7 @@
 { pkgs }:
 with pkgs; [
   # General packages for development and system management
+  argocd
   awscli2
   bash-completion
   bat
@@ -9,11 +10,11 @@ with pkgs; [
   fd
   fzf
   fzf-zsh
-  neofetch
-  oh-my-zsh
   oh-my-posh
+  oh-my-zsh
   openssh
   qemu
+  screenfetch
   slack
   wget
   zip
@@ -48,10 +49,13 @@ with pkgs; [
   tree-sitter
 
   # Fonts
+  nerd-fonts.fira-code
   fira-code
   fira-code-symbols
-  fira-code-nerdfont
   font-manager
   font-awesome_5
   noto-fonts
+
+  # SNMP
+  net-snmp
 ]

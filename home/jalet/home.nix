@@ -14,6 +14,9 @@ in
   home = {
     username = lib.mkDefault userName;
     homeDirectory = lib.mkDefault homeDirectory;
+    sessionPath = [
+      "$HOME/.local/share/nvim/mason/bin"
+    ];
 
     # This value determines the Home Manager release that your configuration is
     # compatible with. This helps avoid breakage when a new Home Manager release
