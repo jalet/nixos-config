@@ -69,6 +69,11 @@ in {
 
       e = "nvim";
     };
+
+    sessionVariables = {
+      EDITOR = "nvim";
+      KUBE_EDITOR = "nvim";
+    };
   };
 
   bat = {
@@ -237,7 +242,6 @@ in {
     '';
     plugins = with pkgs.tmuxPlugins; [
       sensible
-      resurrect
       yank
       tmux-fzf
       gruvbox

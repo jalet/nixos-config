@@ -15,6 +15,7 @@ with pkgs; [
   ipcalc
   kitty
   kitty-themes
+  ko
   neofetch
   nmap
   oh-my-posh
@@ -55,7 +56,7 @@ with pkgs; [
   go_1_23
   lua
   luarocks
-  nodejs_23
+  nodejs_22
   rustc
   terraform
   terraform-docs
