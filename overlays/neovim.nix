@@ -1,11 +1,11 @@
 final: prev: {
   neovim = prev.neovim.overrideAttrs (oldAttrs: {
-    version = "v0.11.0";
+    version = "v0.11.2";
     src = prev.fetchFromGitHub {
       owner = "neovim";
       repo = "neovim";
-      rev = "v0.11.0";
-      sha256 = "sha256-UVMRHqyq3AP9sV79EkPUZnVkj0FpbS+XDPPOppp2yFE=";
+      rev = "v0.11.2";
+      sha256 = "sha256-sNunEdIFrSMqYaNg0hbrSXALRQXxFkdDOl/hhX1L1WA=";
     };
     patches = [];
   });
