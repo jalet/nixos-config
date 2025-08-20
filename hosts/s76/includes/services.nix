@@ -1,7 +1,20 @@
 { pkgs, ... }:
+let
+  fixMountPatch = pkgs.fetchpatch {
+    url = "https://github.com/NixOS/nixpkgs/pull/405952.patch";
+    sha256 = "sha256-tLdKmm0y1fWDlPjNSHTLHExBOgZtodunVO6cPh3JKx0=";
+  };
+
+  myUtilLinuxMinimal = pkgs.util-linuxMinimal.overrideAttrs (prev: {
+    patches = (prev.patches or [ ]) ++ [ fixMountPatch ];
+  });
+
+  myK3s = pkgs.k3s.override {
+    util-linux = myUtilLinuxMinimal;
+  };
+in
 {
   services = {
-
     k3s = {
       enable = true;
       role = "server";
@@ -24,6 +37,8 @@
         "--flannel-backend=none"
         "--secrets-encryption"
         "--write-kubeconfig-mode=644"
+
+        "--prefer-bundled-bin"
       ];
     };
 

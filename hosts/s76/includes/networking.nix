@@ -2,7 +2,7 @@
 let
   vlans = [
     { id = 10; network = "10.10.10"; hosts = [ ]; }
-    { id = 20; network = "10.10.20"; hosts = [ 200 201 202 203 204 205 206 207 208 209 ]; }
+    { id = 20; network = "10.10.20"; hosts = [ 200 ]; }
     { id = 30; network = "10.10.30"; hosts = [ ]; }
     { id = 99; network = "10.10.99"; hosts = [ 200 ]; }
   ];
@@ -67,11 +67,7 @@ in
     );
 
     networkmanager = {
-      enable = true;
-
-      wifi = {
-        powersave = false;
-      };
+      enable = false;
     };
 
     firewall = {
@@ -91,8 +87,10 @@ in
       ];
 
       allowedUDPPorts = [
-        53 #DNS
+        53 # DNS
+        514 # Syslog
       ];
+
       # Traffic coming in from these interfaces will be accepted
       # unconditionally. Traffic from the loopback (lo) interface will always
       # be accepted.
