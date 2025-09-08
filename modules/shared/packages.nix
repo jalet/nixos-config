@@ -20,7 +20,6 @@ with pkgs; [
   nmap
   oh-my-posh
   oh-my-zsh
-  open-policy-agent
   openssh
   qemu
   watch
@@ -40,6 +39,7 @@ with pkgs; [
   ctop
   htop
   jq
+  yq
   neovim
   podman
   podman-tui
@@ -63,6 +63,7 @@ with pkgs; [
   terraform-ls
   tflint
   tree-sitter
+  pulumi
 
   # kubernetes
   cilium-cli
@@ -72,4 +73,5 @@ with pkgs; [
   kubectl
   kubectx
   kubernetes-helm
+  talosctl
 ]

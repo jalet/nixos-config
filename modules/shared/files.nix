@@ -31,6 +31,48 @@ in {
       tables: false
   '';
 
+  "${HOME}/.config/yamllint/config".text = ''
+    ---
+    yaml-files:
+      - '*.yaml'
+      - '*.yml'
+      - '.yamllint'
+
+    rules:
+      anchors: enable
+      braces: enable
+      brackets: enable
+      colons: enable
+      commas: enable
+      comments:
+        level: warning
+      comments-indentation:
+        level: warning
+      document-end: disable
+      document-start:
+        level: warning
+      empty-lines: enable
+      empty-values: disable
+      float-values: disable
+      hyphens: enable
+      indentation:
+        spaces: consistent
+        indent-sequences: false
+      key-duplicates: enable
+      key-ordering: disable
+      line-length:
+          max: 80
+          allow-non-breakable-words: true
+          allow-non-breakable-inline-mappings: true
+      new-line-at-end-of-file: enable
+      new-lines: enable
+      octal-values: disable
+      quoted-strings: disable
+      trailing-spaces: enable
+      truthy:
+        level: warning
+  '';
+
   "${HOME}/.config/ghostty/config".text = ''
     background-opacity = 0.9
     font-family = "Hack Nerd Font Mono"
