@@ -80,7 +80,6 @@ in {
     enable = true;
     config = {
       style = "numbers,changes,header";
-      theme = "gruvbox-dark";
     };
     extraPackages = builtins.attrValues {
       inherit
@@ -236,15 +235,18 @@ in {
     clock24 = true;
     baseIndex = 0;
     shell = "$SHELL";
+    historyLimit = 10000;
     extraConfig = ''
       set-option -g default-command zsh
       set -ag terminal-overrides ",xterm-256color:RGB"
+      set -g @tokyo-night-tmux_theme storm
+      set -g @tokyo-night-tmux_transparent 0
     '';
     plugins = with pkgs.tmuxPlugins; [
       sensible
       yank
       tmux-fzf
-      gruvbox
+      tokyo-night-tmux
     ];
   };
 
@@ -253,87 +255,118 @@ in {
     enableZshIntegration = true;
     settings = builtins.fromJSON(''{
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "console_title_template": " {{ .Folder }} :: {{if .Root}}Admin{{end}}",
+  "palette": {
+    "main-bg": "#24283b",
+    "terminal-red": "#f7768e",
+    "pistachio-green": "#9ece6a",
+    "terminal-green": "#73daca",
+    "terminal-yellow": "#e0af68",
+    "terminal-blue": "#7aa2f7",
+    "celeste-blue": "#b4f9f8",
+    "light-sky-blue": "#7dcfff",
+    "terminal-white": "#c0caf5",
+    "white-blue": "#a9b1d6",
+    "blue-bell": "#9aa5ce",
+    "pastal-grey": "#cfc9c2",
+    "terminal-magenta": "#bb9af7",
+    "blue-black": "#565f89",
+    "terminal-black": "#414868",
+    "t-background": "p:main-bg"
+  },
   "blocks": [
     {
       "alignment": "left",
       "segments": [
         {
-          "background": "#3a3a3a",
-          "foreground": "#d65d0e",
+          "type": "text",
           "style": "plain",
-          "template": "\u26a1 ",
-          "type": "root"
-        },
-        {
           "background": "transparent",
-          "foreground": "#d65d0e",
+          "foreground": "p:terminal-blue",
+          "template": "\u279c "
+        },
+        {
+          "type": "path",
           "style": "plain",
-          "template": "{{ if .WSL }}WSL at {{ end }}{{.Icon}} ",
-          "type": "os"
-        },
-        {
-          "background": "#665c54",
-          "foreground": "#d5c4a1",
-          "leading_diamond": "<transparent,#665c54>\ue0b0</>",
+          "foreground": "p:terminal-magenta",
           "properties": {
-            "folder_icon": "...",
-            "folder_separator_icon": "<transparent> \ue0bd </>",
-            "home_icon": "\ueb06",
-            "style": "agnoster_short"
+            "style": "folder"
           },
-          "style": "diamond",
-          "template": " {{ .Path }} ",
-          "trailing_diamond": "\ue0b0",
-          "type": "path"
+          "template": "<b>{{ .Path }}</b> <p:light-sky-blue>\u26a1</>"
         },
         {
-          "background": "#665c54",
-          "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}#d3869b{{ end }}",
-            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#83a598{{ end }}"
+          "type": "git",
+          "style": "plain",
+          "foreground": "p:light-sky-blue",
+          "foreground_templates": [
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}p:terminal-red{{ end }}",
+            "{{ if and (gt .Ahead 0) (gt .Behind 0)}}p:light-sky-blue {{ end }}",
+            "{{ if gt .Ahead 0 }}p:terminal-blue{{ end }}",
+            "{{ if gt .Behind 0 }}p:celeste-blue{{ end }}"
           ],
-          "foreground": "#d5c4a1",
-          "powerline_symbol": "\ue0b0",
+          "template": "({{ .HEAD}})",
           "properties": {
-            "fetch_status": true
-          },
-          "style": "powerline",
-          "template": " {{ .HEAD }}{{ if .Staging.Changed }}<#FF6F00> \uf046 {{ .Staging.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if gt .StashCount 0 }} \ueb4b {{ .StashCount }}{{ end }} ",
-          "type": "git"
+            "fetch_status": true,
+            "branch_icon": "\ue725 "
+          }
         },
         {
-          "background": "#910000",
-          "foreground": "#d5c4a1",
-          "powerline_symbol": "\ue0b0",
-          "style": "powerline",
-          "template": "<transparent> \uf12a</> {{ reason .Code }} ",
-          "type": "status"
+          "type": "status",
+          "style": "plain",
+          "foreground": "p:terminal-red",
+          "template": " \uf00d"
         }
       ],
       "type": "prompt"
     },
     {
       "alignment": "right",
+      "overflow": "hide",
       "segments": [
         {
-          "background": "#665c54",
-          "foreground": "#d5c4a1",
-          "leading_diamond": "\ue0ba",
-          "trailing_diamond": "\ue0bc",
-          "style": "diamond",
-          "template": "  {{ .UserName }}<transparent> / </>{{ .HostName }} ",
-          "type": "session"
+          "type": "node",
+          "style": "plain",
+          "foreground": "p:pistachio-green",
+          "template": "\ue718 {{ .Full }} "
         },
         {
-          "background": "transparent",
-          "foreground": "#d65d0e",
+          "type": "php",
+          "style": "plain",
+          "foreground": "p:terminal-blue",
+          "template": "\ue73d {{ .Full }} "
+        },
+        {
+          "type": "python",
+          "style": "plain",
+          "foreground": "p:terminal-yellow",
+          "template": "\uE235 {{ .Full }}"
+        },
+        {
+          "type": "julia",
+          "style": "plain",
+          "foreground": "p:terminal-magenta",
+          "template": "\uE624 {{ .Full }}"
+        },
+        {
+          "type": "ruby",
+          "style": "plain",
+          "foreground": "p:terminal-red",
+          "template": "\uE791 {{ .Full}}"
+        },
+        {
+          "type": "go",
+          "style": "plain",
+          "foreground": "p:light-sky-blue",
+          "template": "\uFCD1 {{ .Full}}"
+        },
+        {
+          "type": "command",
+          "style": "plain",
+          "foreground": "p:white-blue",
           "properties": {
-            "time_format": "15:04:05"
-          },
-          "leading_diamond": "\ue0ba",
-          "style": "diamond",
-          "template": " {{ .CurrentDate | date .Format }} ",
-          "type": "time"
+            "command": "git log --pretty=format:%cr -1 || date +%H:%M:%S",
+            "shell": "bash"
+          }
         }
       ],
       "type": "prompt"
@@ -343,23 +376,28 @@ in {
       "newline": true,
       "segments": [
         {
-          "foreground": "#d5c4a1",
-          "foreground_templates": [
-            "{{ if gt .Code 0 }}#ff0000{{ end }}"
-          ],
-          "properties": {
-            "always_enabled": true
-          },
+          "foreground": "p:pistachio-green",
           "style": "plain",
-          "template": "\u276f ",
-          "type": "status"
+          "template": "\u25b6",
+          "type": "text"
         }
       ],
       "type": "prompt"
     }
   ],
-  "console_title_template": "{{if .Root}} \u26a1 {{end}}{{.Folder | replace \"~\" \"🏚\" }} @ {{.HostName}}",
-  "version": 3
+  "secondary_prompt": {
+    "background": "transparent",
+    "foreground": "p:terminal-blue",
+    "template": "\u279c "
+  },
+  "transient_prompt": {
+    "background": "p:t-background",
+    "foreground": "p:terminal-blue",
+    "template": "\u279c "
+  },
+  "final_space": true,
+  "version": 3,
+  "terminal_background": "p:t-background"
 }'');
   };
 
