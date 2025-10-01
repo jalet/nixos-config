@@ -71,12 +71,12 @@ in {
     #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
     #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
     [gaps]
-    inner.horizontal = 10
-    inner.vertical =   10
-    outer.left =       10
-    outer.bottom =     10
-    outer.top =        10
-    outer.right =      10
+    inner.horizontal = 20
+    inner.vertical =   20
+    outer.left =       20
+    outer.bottom =     20
+    outer.top =        20
+    outer.right =      20
 
     # 'main' binding mode declaration
     # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -203,10 +203,6 @@ in {
     esc = 'mode main'
 
     [[on-window-detected]]
-    if.app-id = 'net.kovidgoyal.kitty'
-    run = 'move-node-to-workspace 1'
-
-    [[on-window-detected]]
     if.app-id = 'com.tinyspeck.slackmacgap'
     run = 'move-node-to-workspace 1'
 
@@ -224,6 +220,6 @@ in {
 
     [[on-window-detected]]
     if.app-id = 'com.apple.MobileSMS'
-    run = 'move-node-to-workspace 8'
+    run = 'move-node-to-workspace 9'
   '';
 }

@@ -53,7 +53,8 @@ with pkgs; [
   alejandra
   bun
   cargo
-  go_1_23
+  claude-code
+  go
   lua
   luarocks
   nodejs_22
@@ -73,5 +74,17 @@ with pkgs; [
   kubectl
   kubectx
   kubernetes-helm
-  talosctl
+  (talosctl.overrideAttrs (oldAttrs: rec {
+    version = "1.11.1";
+    src = pkgs.fetchFromGitHub {
+      owner = "siderolabs";
+      repo = "talos";
+      rev = "v${version}";
+      hash = "sha256-G+su1Udkp/IqsU9/TWcEQO4MY8iGC+QM39eMeBUSaDs=";
+    };
+    vendorHash = "sha256-x9In+TaEuYMB0swuMzyXQRRnWgP1Krg7vKQH4lqDf+c=";
+    ldflags = oldAttrs.ldflags or [] ++ [
+      "-X github.com/siderolabs/talos/pkg/machinery/version.Tag=v${version}"
+    ];
+  }))
 ]

@@ -57,13 +57,13 @@ in {
       hyphens: enable
       indentation:
         spaces: consistent
-        indent-sequences: false
+        indent-sequences: consistent
       key-duplicates: enable
       key-ordering: disable
       line-length:
-          max: 80
-          allow-non-breakable-words: true
-          allow-non-breakable-inline-mappings: true
+        max: 120
+        allow-non-breakable-words: true
+        allow-non-breakable-inline-mappings: true
       new-line-at-end-of-file: enable
       new-lines: enable
       octal-values: disable
@@ -74,10 +74,10 @@ in {
   '';
 
   "${HOME}/.config/ghostty/config".text = ''
-    background-opacity = 0.9
+    background-opacity = 0.85
     font-family = "Hack Nerd Font Mono"
     font-size = 16
-    theme = GruvboxDark 
+    theme = Gruvbox Dark
     window-padding-x = 5
   '';
 
