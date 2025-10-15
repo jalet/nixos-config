@@ -12,8 +12,6 @@ in {
     pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
     enable-ssh-support
     ttyname $GPG_TTY
-    default-cache-ttl 120
-    max-cache-ttl 240
   '';
 
 

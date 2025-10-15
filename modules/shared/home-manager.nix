@@ -238,6 +238,7 @@ in {
     historyLimit = 10000;
     extraConfig = ''
       set-option -g default-command zsh
+      set-option -g status-position top
       set -ag terminal-overrides ",xterm-256color:RGB"
       set -g @tokyo-night-tmux_theme storm
       set -g @tokyo-night-tmux_transparent 0

@@ -32,6 +32,7 @@ with pkgs; [
   ssm-session-manager-plugin
   yubikey-agent
   yubikey-manager
+  pwgen
 
   # Text and terminal utilities
   docker
@@ -65,13 +66,16 @@ with pkgs; [
   tflint
   tree-sitter
   pulumi
+  uv
 
   # kubernetes
   cilium-cli
   hubble
   istioctl
   k9s
+  kubecolor
   kubectl
+  kubectl-cnpg
   kubectx
   kubernetes-helm
   (talosctl.overrideAttrs (oldAttrs: rec {
