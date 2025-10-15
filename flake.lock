@@ -206,6 +206,22 @@
         "url": "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz"
       }
     },
+    "nixpkgs-ruby-fix": {
+      "locked": {
+        "lastModified": 1760287183,
+        "narHash": "sha256-LszgZi9LPNLy6WyUksbzDCr0grouxb/MIGki76B7s3k=",
+        "owner": "emilazy",
+        "repo": "nixpkgs",
+        "rev": "cdb57da081701af98fcc5944dc8e174548f5584f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "emilazy",
+        "repo": "nixpkgs",
+        "rev": "cdb57da081701af98fcc5944dc8e174548f5584f",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1758360447,
@@ -261,7 +277,8 @@
         "homebrew-core": "homebrew-core",
         "nikitabobko-tap": "nikitabobko-tap",
         "nix-homebrew": "nix-homebrew",
-        "nixpkgs": "nixpkgs_4"
+        "nixpkgs": "nixpkgs_4",
+        "nixpkgs-ruby-fix": "nixpkgs-ruby-fix"
       }
     },
     "systems": {
