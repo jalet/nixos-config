@@ -13,8 +13,6 @@ with pkgs; [
   fzf-zsh
   iftop
   ipcalc
-  kitty
-  kitty-themes
   ko
   neofetch
   nmap
@@ -29,10 +27,11 @@ with pkgs; [
 
   # Encryption and security tools
   gnupg
+  pwgen
   ssm-session-manager-plugin
+  tailscale
   yubikey-agent
   yubikey-manager
-  pwgen
 
   # Text and terminal utilities
   docker
@@ -59,13 +58,14 @@ with pkgs; [
   lua
   luarocks
   nodejs_22
+  pulumi
+  python314
   rustc
   terraform
   terraform-docs
   terraform-ls
   tflint
   tree-sitter
-  pulumi
   uv
 
   # kubernetes

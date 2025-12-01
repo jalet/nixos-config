@@ -44,7 +44,7 @@ in {
   environment.systemPackages = with pkgs;
     [
     ]
-    ++ (import ../../modules/shared/packages.nix {inherit pkgs;});
+    ++ (import ../../modules/darwin/packages.nix {inherit pkgs;});
 
   fonts = {
     packages = with pkgs; [

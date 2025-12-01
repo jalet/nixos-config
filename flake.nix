@@ -24,23 +24,14 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
-    nikitabobko-tap = {
-      url = "github:nikitabobko/homebrew-tap";
-      flake = false;
-    };
-    ghostty = {
-      url = "github:ghostty-org/ghostty";
-    };
   };
 
   outputs = {
     darwin,
-    ghostty,
     home-manager,
     homebrew-bundle,
     homebrew-cask,
     homebrew-core,
-    nikitabobko-tap,
     nix-homebrew,
     nixpkgs,
     nixpkgs-ruby-fix,
@@ -112,7 +103,6 @@
                   "homebrew/homebrew-core" = homebrew-core;
                   "homebrew/homebrew-cask" = homebrew-cask;
                   "homebrew/homebrew-bundle" = homebrew-bundle;
-                  "nikitabobko/homebrew-tap" = nikitabobko-tap;
                 };
 		mutableTaps = false;
               };

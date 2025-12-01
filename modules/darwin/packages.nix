@@ -4,6 +4,7 @@ with pkgs; let
 in
   shared-packages
   ++ [
+    aerospace
     dockutil
     pinentry_mac
   ]

@@ -5,6 +5,7 @@
 }: let
   name = "Joakim Jarsäter";
   email = "joakim@jarsater.com";
+  signingkey = "0x4EE738F142BF5D51";
 in {
   # Shared shell configuration
   zsh = {
@@ -63,11 +64,9 @@ in {
     shellAliases = {
       ls = "eza --color=always --icons=always";
       cat = "bat";
-      diff = "batdiff";
-      rg = "batgrep";
       man = "batman";
-
       e = "nvim";
+      k = "kubecolor";
     };
 
     sessionVariables = {
@@ -84,8 +83,6 @@ in {
     extraPackages = builtins.attrValues {
       inherit
         (pkgs.bat-extras)
-        batgrep
-        batdiff
         batman
         ;
     };
@@ -99,73 +96,15 @@ in {
 
   git = {
     enable = true;
-    userName = name;
-    userEmail = email;
 
-    ignores = [
-      # -- Compiled source ----------------------------------------------------------
-      "*.com"
-      "*.class"
-      "*.dll"
-      "*.exe"
-      "*.o"
-      "*.so"
+    settings = {
+      alias = {
+        st = "status";
+        ls = "ls-files";
+        co = "checkout";
+        cob = "checkout -b";
+      };
 
-      # Packages --------------------------------------------------------------------
-      "*.7z"
-      "*.dmg"
-      "*.gz"
-      "*.iso"
-      "*.jar"
-      "*.rar"
-      "*.tar"
-      "*.zip"
-
-      # Logs and databases ----------------------------------------------------------
-      "*.log"
-      "*.sqlite"
-
-      # OS generated files ----------------------------------------------------------
-      ".DS_Store"
-      ".DS_Store?"
-      "._*"
-      ".Spotlight-V100"
-      ".Trashes"
-      "ehthumbs.db"
-      "Thumbs.db"
-      "dump.rdp"
-      ".vscode"
-
-      # -- IntelliJ -----------------------------------------------------------------
-      ".idea/"
-      ".idea/aws.xml"
-      ".idea/misc.xml"
-      ".idea/modules.xml"
-      ".idea/payments-atlantis.iml"
-      ".idea/vcs.xml"
-      ".idea/workspace.xml"
-
-      # -- Misc ---------------------------------------------------------------------
-      "config.*-local.yml"
-      "*.env"
-      "bin/circleci-test-build"
-      ".tool-versions"
-      ".settings"
-      ".classpath"
-      ".project"
-      ".secrets"
-      "spell/"
-      ".factorypath"
-    ];
-
-    aliases = {
-      st = "status";
-      ls = "ls-files";
-      co = "checkout";
-      cob = "checkout -b";
-    };
-
-    extraConfig = {
       init = {
         defaultBranch = "main";
       };
@@ -197,7 +136,9 @@ in {
       };
 
       user = {
-        signingkey = "0x4EE738F142BF5D51";
+        name = name;
+        email = email;
+        signingkey = signingkey;
       };
 
       gpg = {
@@ -211,6 +152,65 @@ in {
         graph = true;
       };
     };
+
+    ignores = [
+      # -- Compiled source ----------------------------------------------------
+      "*.com"
+      "*.class"
+      "*.dll"
+      "*.exe"
+      "*.o"
+      "*.so"
+
+      # Packages --------------------------------------------------------------
+      "*.7z"
+      "*.dmg"
+      "*.gz"
+      "*.iso"
+      "*.jar"
+      "*.rar"
+      "*.tar"
+      "*.zip"
+
+      # Logs and databases ----------------------------------------------------
+      "*.log"
+      "*.sqlite"
+
+      # OS generated files ----------------------------------------------------
+      ".DS_Store"
+      ".DS_Store?"
+      "._*"
+      ".Spotlight-V100"
+      ".Trashes"
+      "ehthumbs.db"
+      "Thumbs.db"
+      "dump.rdp"
+      ".vscode"
+
+      # -- IntelliJ -----------------------------------------------------------
+      ".idea/"
+      ".idea/aws.xml"
+      ".idea/misc.xml"
+      ".idea/modules.xml"
+      ".idea/payments-atlantis.iml"
+      ".idea/vcs.xml"
+      ".idea/workspace.xml"
+
+      # -- Misc ---------------------------------------------------------------
+      "config.*-local.yml"
+      "*.env"
+      "bin/circleci-test-build"
+      ".tool-versions"
+      ".settings"
+      ".classpath"
+      ".project"
+      ".secrets"
+      "spell/"
+      ".factorypath"
+
+      # -- Code assistance ----------------------------------------------------
+      ".claude/"
+    ];
   };
 
   gh = {
@@ -220,6 +220,19 @@ in {
       editor = "nvim";
     };
   };
+
+  # Ghostty installed via Homebrew cask instead of Nix
+  # Configuration managed via files module
+  # ghostty = {
+  #   enable = true;
+  #   enableZshIntegration = true;
+  #   settings = {
+  #     font-family = "Hack Nerd Font Mono";
+  #     font-size = 16;
+  #     theme = "TokyoNight Storm";
+  #     window-padding-x = 5;
+  #   };
+  # };
 
   gpg = {
     enable = false;
@@ -404,6 +417,7 @@ in {
 
   ssh = {
     enable = true;
+    enableDefaultConfig = true;
     matchBlocks = {
       "*" = {
         setEnv = {

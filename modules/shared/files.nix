@@ -60,13 +60,6 @@ in {
         level: warning
   '';
 
-  "${HOME}/.config/ghostty/config".text = ''
-    font-family = "Hack Nerd Font Mono"
-    font-size = 16
-    theme = TokyoNight Storm
-    window-padding-x = 5
-  '';
-
   "${HOME}/.editodconfig".text = ''
     # EditorConfig is awesome: https://EditorConfig.org
 
