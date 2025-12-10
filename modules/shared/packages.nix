@@ -32,6 +32,7 @@ with pkgs; [
   tailscale
   yubikey-agent
   yubikey-manager
+  sops
 
   # Text and terminal utilities
   docker

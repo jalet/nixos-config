@@ -11,6 +11,10 @@ in {
   "${HOME}/.gnupg/gpg-agent.conf".text = ''
     pinentry-program ${pkgs.pinentry_mac}/Applications/pinentry-mac.app/Contents/MacOS/pinentry-mac
     enable-ssh-support
+    default-cache-ttl 7200
+    max-cache-ttl 7200
+    default-cache-ttl-ssh 86400
+    max-cache-ttl-ssh 86400
     ttyname $GPG_TTY
   '';
 

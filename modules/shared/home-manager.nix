@@ -221,19 +221,6 @@ in {
     };
   };
 
-  # Ghostty installed via Homebrew cask instead of Nix
-  # Configuration managed via files module
-  # ghostty = {
-  #   enable = true;
-  #   enableZshIntegration = true;
-  #   settings = {
-  #     font-family = "Hack Nerd Font Mono";
-  #     font-size = 16;
-  #     theme = "TokyoNight Storm";
-  #     window-padding-x = 5;
-  #   };
-  # };
-
   gpg = {
     enable = false;
     scdaemonSettings = {
