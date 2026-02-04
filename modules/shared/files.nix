@@ -9,6 +9,7 @@ in {
     # npmrc
     cache=${HOME}/.cache/npm
     prefix=${HOME}/.local/npm
+    //npm.pkg.github.com/:_authToken=$NPM_TOKEN
   '';
 
   "${HOME}/.markdownlint.yaml".text = ''

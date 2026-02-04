@@ -7,10 +7,10 @@ with pkgs; [
   bat
   btop
   coreutils
+  drawio
   eza
   fd
   fzf
-  fzf-zsh
   iftop
   ipcalc
   ko
@@ -28,7 +28,7 @@ with pkgs; [
   # Encryption and security tools
   gnupg
   pwgen
-  ssm-session-manager-plugin
+  # ssm-session-manager-plugin  # broken in nixpkgs - Go vendoring issue
   tailscale
   yubikey-agent
   yubikey-manager
@@ -79,17 +79,18 @@ with pkgs; [
   kubectl-cnpg
   kubectx
   kubernetes-helm
-  (talosctl.overrideAttrs (oldAttrs: rec {
-    version = "1.11.1";
-    src = pkgs.fetchFromGitHub {
-      owner = "siderolabs";
-      repo = "talos";
-      rev = "v${version}";
-      hash = "sha256-G+su1Udkp/IqsU9/TWcEQO4MY8iGC+QM39eMeBUSaDs=";
+  (stdenv.mkDerivation rec {
+    pname = "talosctl";
+    version = "1.12.1";
+    src = pkgs.fetchurl {
+      url = "https://github.com/siderolabs/talos/releases/download/v${version}/talosctl-darwin-arm64";
+      hash = "sha256-Wwg2olmKliAgxdlqQoZ3fBGqiKdxooRFcBDIyHDKKJc=";
     };
-    vendorHash = "sha256-x9In+TaEuYMB0swuMzyXQRRnWgP1Krg7vKQH4lqDf+c=";
-    ldflags = oldAttrs.ldflags or [] ++ [
-      "-X github.com/siderolabs/talos/pkg/machinery/version.Tag=v${version}"
-    ];
-  }))
+    dontUnpack = true;
+    installPhase = ''
+      mkdir -p $out/bin
+      cp $src $out/bin/talosctl
+      chmod +x $out/bin/talosctl
+    '';
+  })
 ]
