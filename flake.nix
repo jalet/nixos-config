@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-ruby-fix.url = "github:emilazy/nixpkgs/cdb57da081701af98fcc5944dc8e174548f5584f";
     home-manager.url = "github:nix-community/home-manager";
     darwin = {
       url = "github:LnL7/nix-darwin";
@@ -34,7 +33,6 @@
     homebrew-core,
     nix-homebrew,
     nixpkgs,
-    nixpkgs-ruby-fix,
     self,
   } @ inputs: let
     user = "jj";
@@ -42,9 +40,6 @@
     darwinSystems = ["aarch64-darwin" "x86_64-darwin"];
     forAllSystems = f: nixpkgs.lib.genAttrs (linuxSystems ++ darwinSystems) f;
 
-    rubyOverlay = final: prev: {
-      inherit (nixpkgs-ruby-fix.legacyPackages.${final.system}) ruby_3_3;
-    };
     devShell = system: let
       pkgs = nixpkgs.legacyPackages.${system};
     in {
@@ -90,7 +85,7 @@
           specialArgs = inputs;
           modules = [
             {
-              nixpkgs.overlays = [ rubyOverlay ];
+              nixpkgs.overlays = [ ];
               nixpkgs.config.allowUnfree = true;
             }
             home-manager.darwinModules.home-manager
