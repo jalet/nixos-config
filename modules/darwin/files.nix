@@ -21,7 +21,8 @@ in {
   "${HOME}/.config/ghostty/config".text = ''
     font-family = Hack Nerd Font Mono
     font-size = 16
-    theme = TokyoNight Storm
+    theme = Gruvbox Dark
+    background-opacity = 0.95
     window-padding-x = 5
   '';
 }

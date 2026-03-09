@@ -9,12 +9,14 @@ with pkgs; [
   coreutils
   drawio
   eza
+  fastfetch
   fd
+  firefox
   fzf
+  granted
   iftop
   ipcalc
   ko
-  neofetch
   nmap
   oh-my-posh
   oh-my-zsh
@@ -32,11 +34,13 @@ with pkgs; [
   tailscale
   yubikey-agent
   yubikey-manager
+  step-cli
   sops
 
   # Text and terminal utilities
   docker
   docker-compose
+  claude-monitor
   ctop
   htop
   jq
@@ -54,7 +58,6 @@ with pkgs; [
   alejandra
   bun
   cargo
-  claude-code
   go
   lua
   luarocks
