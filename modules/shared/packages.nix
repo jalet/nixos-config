@@ -1,6 +1,7 @@
 {pkgs}:
 with pkgs; [
   # General packages for development and system management
+  adr-tools
   awscli2
   awslogs
   bash-completion
@@ -58,6 +59,8 @@ with pkgs; [
   alejandra
   bun
   cargo
+  cargo-audit
+  clippy
   go
   lua
   luarocks
@@ -65,6 +68,7 @@ with pkgs; [
   pulumi
   python314
   rustc
+  rustfmt
   terraform
   terraform-docs
   terraform-ls
