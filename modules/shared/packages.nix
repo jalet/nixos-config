@@ -32,7 +32,6 @@ with pkgs; [
   gnupg
   pwgen
   # ssm-session-manager-plugin  # broken in nixpkgs - Go vendoring issue
-  tailscale
   yubikey-agent
   yubikey-manager
   step-cli
@@ -66,6 +65,7 @@ with pkgs; [
   luarocks
   nodejs_22
   pulumi
+  pulumiPackages.pulumi-go
   python314
   rustc
   rustfmt

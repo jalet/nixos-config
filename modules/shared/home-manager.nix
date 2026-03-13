@@ -152,6 +152,12 @@ in {
         dateOrder = true;
         graph = true;
       };
+
+      url = {
+        "ssh://git@github.com/" = {
+          insteadOf = ["https://github.com/" "https://git::@github.com/"];
+        };
+      };
     };
 
     ignores = [
