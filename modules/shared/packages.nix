@@ -29,6 +29,7 @@ with pkgs; [
   zip
 
   # Encryption and security tools
+  age
   gnupg
   pwgen
   # ssm-session-manager-plugin  # broken in nixpkgs - Go vendoring issue
@@ -77,6 +78,7 @@ with pkgs; [
   uv
 
   # kubernetes
+  argocd
   cilium-cli
   hubble
   istioctl
