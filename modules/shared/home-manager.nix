@@ -252,13 +252,50 @@ in {
       set-option -g default-command zsh
       set-option -g status-position bottom
       set -ag terminal-overrides ",xterm-256color:RGB"
-      set -g @tmux-gruvbox "dark256"
+
+      # Gruvbox dark palette (matches starship exactly)
+      # color_fg0    = #fbf1c7
+      # color_bg1    = #3c3836
+      # color_bg3    = #665c54
+      # color_orange = #d65d0e
+      # color_yellow = #d79921
+      # color_aqua   = #689d6a
+      # color_blue   = #458588
+      # color_purple = #b16286
+
+      set -g status-style "bg=default"
+      set -g status-left-length 40
+      set -g status-right-length 40
+
+      # Rounded powerline separators: U+E0B4 () and U+E0B6 ()
+      # Status left: session name in orange pill
+      set -g status-left "#[fg=#d65d0e,bg=default]#[fg=#fbf1c7,bg=#d65d0e,bold] #S #[fg=#d65d0e,bg=default] "
+
+      # Status right: empty
+      set -g status-right ""
+      set -g window-status-separator " "
+
+      # Window base styles control cap colors; inline overrides handle fill only
+      set -g window-status-style "fg=#504945,bg=default,none"
+      set -g window-status-current-style "fg=#d79921,bg=default,bold"
+
+      # Window: inactive — grey pill (caps inherit fg=#504945 from window-status-style)
+      set -g window-status-format "#[fg=#fbf1c7,bg=#504945] #I > #W #[default]"
+
+      # Window: active — yellow pill (caps inherit fg=#d79921 from window-status-current-style)
+      set -g window-status-current-format "#[fg=#1d2021,bg=#d79921] #I > #W #[default]"
+
+      # Pane borders
+      set -g pane-border-style "fg=#665c54"
+      set -g pane-active-border-style "fg=#d65d0e"
+
+      # Message style
+      set -g message-style "bg=#d79921,fg=#3c3836"
     '';
     plugins = with pkgs.tmuxPlugins; [
       sensible
       yank
       tmux-fzf
-      gruvbox
     ];
   };
 
