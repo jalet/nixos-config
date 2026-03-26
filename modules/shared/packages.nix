@@ -19,7 +19,6 @@ with pkgs; [
   ipcalc
   ko
   nmap
-  oh-my-posh
   oh-my-zsh
   openssh
   qemu
@@ -88,18 +87,5 @@ with pkgs; [
   kubectl-cnpg
   kubectx
   kubernetes-helm
-  (stdenv.mkDerivation rec {
-    pname = "talosctl";
-    version = "1.12.1";
-    src = pkgs.fetchurl {
-      url = "https://github.com/siderolabs/talos/releases/download/v${version}/talosctl-darwin-arm64";
-      hash = "sha256-Wwg2olmKliAgxdlqQoZ3fBGqiKdxooRFcBDIyHDKKJc=";
-    };
-    dontUnpack = true;
-    installPhase = ''
-      mkdir -p $out/bin
-      cp $src $out/bin/talosctl
-      chmod +x $out/bin/talosctl
-    '';
-  })
+  talosctl
 ]

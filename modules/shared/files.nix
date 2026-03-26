@@ -83,6 +83,8 @@ in {
     indent_style = tab
   '';
 
+  "${HOME}/.config/starship.toml".source = ./config/starship.toml;
+
   "${HOME}/.config/git/allowed-signers".text = ''
     j@jarsater.com valid-before="20250124" sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIP6Za2Rait6hAZYgHkL1oTR5A4mnupddtODneWfqw6JzAAAABnNzaDpwZw== ssh:pg 
     j@jarsater.com valid-before="20250124" sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIGe3FuAf6BN0Zr3aUEa/wIQ2S3vQuZ8ihGRqCs2/HiHnAAAABnNzaDptZQ== ssh:me

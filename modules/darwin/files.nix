@@ -22,7 +22,6 @@ in {
     font-family = Hack Nerd Font Mono
     font-size = 16
     theme = Gruvbox Dark
-    background-opacity = 0.95
     window-padding-x = 5
   '';
 }
