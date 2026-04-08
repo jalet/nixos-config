@@ -61,6 +61,7 @@ with pkgs; [
   cargo-audit
   clippy
   go
+  goreleaser
   lua
   luarocks
   nodejs_22
@@ -69,6 +70,7 @@ with pkgs; [
   python314
   rustc
   rustfmt
+  shellcheck
   terraform
   terraform-docs
   terraform-ls
@@ -82,6 +84,7 @@ with pkgs; [
   hubble
   istioctl
   k9s
+  kind
   kubecolor
   kubectl
   kubectl-cnpg

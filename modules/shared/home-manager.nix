@@ -37,6 +37,10 @@ in {
     };
 
     initContent = lib.mkBefore ''
+      # Add local completions directory to fpath
+      mkdir -p "$HOME/.zsh/completions"
+      fpath=("$HOME/.zsh/completions" $fpath)
+
       if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
         . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
         . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
