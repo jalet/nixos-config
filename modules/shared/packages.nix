@@ -21,6 +21,7 @@ with pkgs; [
   nmap
   oh-my-zsh
   openssh
+  oxide-rs
   qemu
   watch
   wezterm
@@ -57,9 +58,6 @@ with pkgs; [
   # Languages, LSPs and Formatters
   alejandra
   bun
-  cargo
-  cargo-audit
-  clippy
   go
   goreleaser
   lua
@@ -68,8 +66,7 @@ with pkgs; [
   pulumi
   pulumiPackages.pulumi-go
   python314
-  rustc
-  rustfmt
+  rustup
   shellcheck
   terraform
   terraform-docs
