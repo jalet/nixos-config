@@ -72,7 +72,7 @@ with pkgs; [
   terraform-docs
   terraform-ls
   tflint
-  tree-sitter
+  tree-sitter-cli
   uv
 
   # kubernetes

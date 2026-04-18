@@ -88,6 +88,29 @@
               nixpkgs.overlays = [
                 (_: prev: {
                   nushell = prev.nushell.overrideAttrs (_: { doCheck = false; });
+
+                  # nvim-treesitter's main branch requires tree-sitter-cli >= 0.26.1,
+                  # but nixpkgs unstable still ships 0.25.10 with no PR in flight.
+                  # Expose v0.26.8 as a separate attribute for the CLI only.
+                  # (Overriding `tree-sitter` directly breaks neovim's build
+                  # because its functional tests link against libtree-sitter and
+                  # fail on the newer ABI.) Drop once nixpkgs ships >= 0.26.1.
+                  tree-sitter-cli = prev.tree-sitter.overrideAttrs (finalAttrs: _: rec {
+                    version = "0.26.8";
+                    src = prev.fetchFromGitHub {
+                      owner = "tree-sitter";
+                      repo = "tree-sitter";
+                      tag = "v${version}";
+                      hash = "sha256-fcFEfoALrbpBD6rWogxJ7FNVlvDQgswoX9ylRgko+8Q=";
+                      fetchSubmodules = true;
+                    };
+                    patches = [ ];
+                    cargoDeps = prev.rustPlatform.fetchCargoVendor {
+                      inherit src;
+                      name = "tree-sitter-${finalAttrs.version}-vendor-staging";
+                      hash = "sha256-9FeWnWWPUWmMF15Psmul8GxGv2JceHWc2WZPmOr81gw=";
+                    };
+                  });
                 })
               ];
               nixpkgs.config.allowUnfree = true;
