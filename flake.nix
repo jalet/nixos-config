@@ -85,7 +85,11 @@
           specialArgs = inputs;
           modules = [
             {
-              nixpkgs.overlays = [ ];
+              nixpkgs.overlays = [
+                (_: prev: {
+                  nushell = prev.nushell.overrideAttrs (_: { doCheck = false; });
+                })
+              ];
               nixpkgs.config.allowUnfree = true;
             }
             home-manager.darwinModules.home-manager
