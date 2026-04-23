@@ -36,7 +36,7 @@ in {
       ];
     };
 
-    initContent = lib.mkBefore ''
+    initContent = lib.mkBefore (''
       # Add local completions directory to fpath
       mkdir -p "$HOME/.zsh/completions"
       fpath=("$HOME/.zsh/completions" $fpath)
@@ -67,7 +67,15 @@ in {
 
       # Granted assume alias
       alias assume="source ${pkgs.granted}/bin/assume"
-    '';
+    '' + lib.optionalString pkgs.stdenv.isDarwin ''
+
+      totp() {
+        local account
+        account=$(ykman oath accounts list | fzf) || return
+        ykman oath accounts code -s "$account" | tr -d '\n' | pbcopy
+        echo "copied TOTP for: $account"
+      }
+    '');
 
     shellAliases = {
       ls = "eza --color=always --icons=always";
