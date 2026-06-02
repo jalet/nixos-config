@@ -45,6 +45,32 @@ in {
           additionalFiles
         ];
         stateVersion = "23.11";
+        activation.generateZshCompletions = lib.hm.dag.entryAfter ["writeBoundary"] ''
+          export PATH="$HOME/.nix-profile/bin:/run/current-system/sw/bin:$PATH"
+          COMP_DIR="$HOME/.zsh/completions"
+          $DRY_RUN_CMD mkdir -p "$COMP_DIR"
+
+          gen() {
+            local bin="$1" file="$2"; shift 2
+            if command -v "$bin" >/dev/null 2>&1; then
+              "$bin" "$@" > "$COMP_DIR/$file.tmp" 2>/dev/null \
+                && mv "$COMP_DIR/$file.tmp" "$COMP_DIR/$file" \
+                || rm -f "$COMP_DIR/$file.tmp" "$COMP_DIR/$file"
+            else
+              rm -f "$COMP_DIR/$file"
+            fi
+          }
+
+          gen gh        _gh        completion --shell zsh
+          gen kubectl   _kubectl   completion zsh
+          gen helm      _helm      completion zsh
+          gen argocd    _argocd    completion zsh
+          gen kubecolor _kubecolor completion zsh
+          gen podman    _podman    completion zsh
+
+          # Force compinit to rebuild its dump on next shell so the new files are picked up.
+          $DRY_RUN_CMD rm -f "$HOME/.zcompdump" "$HOME"/.zcompdump-*
+        '';
       };
       programs = {
         aerospace = {

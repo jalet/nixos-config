@@ -31,7 +31,6 @@ with pkgs; [
   # Encryption and security tools
   age
   gnupg
-  pwgen
   # ssm-session-manager-plugin  # broken in nixpkgs - Go vendoring issue
   yubikey-agent
   yubikey-manager
@@ -68,10 +67,6 @@ with pkgs; [
   python314
   rustup
   shellcheck
-  terraform
-  terraform-docs
-  terraform-ls
-  tflint
   tree-sitter-cli
   uv
 

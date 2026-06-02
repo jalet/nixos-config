@@ -18,21 +18,8 @@ in {
       enable = true;
       plugins = [
         "sudo"
-        "tmux"
-        "aws"
-        "fzf"
-        "gh"
         "git"
-        "github"
-        "docker"
-        "podman"
-        "terraform"
-
-        # kubernetes
-        "kubectl"
-        "kubectx"
-        "helm"
-        "argocd"
+        "fzf"
       ];
     };
 
@@ -51,19 +38,29 @@ in {
       export PATH=$HOME/.local/share/bin:$PATH
       export PATH=$PATH:$HOME/.local/npm/bin
       export PATH=$PATH:$HOME/.cargo/bin
-      export PATH=$PATH:$(go env GOPATH)/bin
+      export PATH=$PATH:$HOME/go/bin
       export PATH=$PATH:/opt/homebrew/bin
 
       # Remove history data we don't want to see
       export HISTIGNORE="pwd:ls:cd"
 
-      export DOCKER_HOST=unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')
-
-
       export GPG_TTY="$(tty)"
       export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-      gpgconf --launch gpg-agent
-      gpg-connect-agent updatestartuptty /bye > /dev/null
+
+      # Heavy one-shot setup: only run in the outermost shell, not in every tmux pane.
+      # Tmux panes inherit the env set here, so DOCKER_HOST/GPG_TTY survive into them.
+      if [[ -z "$TMUX" ]]; then
+        gpgconf --launch gpg-agent
+        gpg-connect-agent updatestartuptty /bye > /dev/null
+        if command -v podman >/dev/null 2>&1; then
+          _podman_sock=$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}' 2>/dev/null)
+          [[ -n "$_podman_sock" ]] && export DOCKER_HOST="unix://$_podman_sock"
+          unset _podman_sock
+        fi
+      fi
+
+      # AWS CLI uses a callback completer, not a static file
+      command -v aws_completer >/dev/null 2>&1 && complete -C aws_completer aws
 
       # Granted assume alias
       alias assume="source ${pkgs.granted}/bin/assume"
@@ -257,13 +254,15 @@ in {
     terminal = "tmux-256color";
     keyMode = "vi";
     clock24 = true;
-    baseIndex = 0;
-    shell = "$SHELL";
-    historyLimit = 10000;
+    baseIndex = 1;
+    historyLimit = 50000;
     extraConfig = ''
-      set-option -g default-command zsh
+      # Undo tmux-sensible's reattach-to-user-namespace wrapper (legacy pre-Mojave fix)
+      set -gu default-command
+      setw -g pane-base-index 1
+      set -ag terminal-features ',*:RGB'
+
       set-option -g status-position bottom
-      set -ag terminal-overrides ",xterm-256color:RGB"
 
       # Gruvbox dark palette (matches starship exactly)
       # color_fg0    = #fbf1c7
