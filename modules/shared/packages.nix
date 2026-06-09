@@ -18,6 +18,7 @@ with pkgs; [
   iftop
   ipcalc
   ko
+  mise
   nmap
   oh-my-zsh
   openssh
@@ -62,8 +63,7 @@ with pkgs; [
   lua
   luarocks
   nodejs_22
-  pulumi
-  pulumiPackages.pulumi-go
+  pulumi-bin
   python314
   rustup
   shellcheck

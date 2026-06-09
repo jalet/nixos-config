@@ -1,0 +1,19 @@
+# Managed by nixos-config. k9s custom views.
+# Adds a WORKLOAD column sourced from the Karpenter workload-type node label
+# (node.playgroundtech.io/workload-type = general|isolated|observability|jobs|...).
+views:
+  v1/nodes:
+    sortColumn: NAME:asc
+    columns:
+      - NAME
+      - "WORKLOAD:.metadata.labels.node\.playgroundtech\.io/workload-type"
+      - STATUS
+      - TAINTS
+      - VERSION
+      - PODS
+      - "CPU"
+      - "CPU/A"
+      - "%CPU"
+      - "MEM"
+      - "MEM/A"
+      - "%MEM"

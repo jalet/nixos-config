@@ -85,6 +85,7 @@ in {
     sessionVariables = {
       EDITOR = "nvim";
       KUBE_EDITOR = "nvim";
+      K9S_CONFIG_DIR = "$HOME/.config/k9s";
     };
   };
 
