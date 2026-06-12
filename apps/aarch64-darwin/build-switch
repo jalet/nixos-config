@@ -10,11 +10,25 @@ FLAKE_SYSTEM="darwinConfigurations.${SYSTEM_TYPE}.system"
 
 export NIXPKGS_ALLOW_UNFREE=1
 
+# When invoked via `sudo nix run`, HOME still points at the invoking
+# user's home, which nix warns about. Use root's HOME instead. The repo
+# stays readable because libgit2 trusts repos owned by $SUDO_UID.
+if [ "$(id -u)" -eq 0 ]; then
+  export HOME=/var/root
+fi
+
 echo "${YELLOW}Starting build...${NC}"
 nix --show-trace --extra-experimental-features 'nix-command flakes' build .#$FLAKE_SYSTEM $@
 
 echo "${YELLOW}Switching to new generation...${NC}"
-./result/sw/bin/darwin-rebuild switch --flake .#${SYSTEM_TYPE} $@
+# darwin-rebuild switch must run as root. Elevate only if needed:
+# nesting sudo would reset SUDO_UID to 0 and make libgit2 reject the
+# user-owned repo ("repository path ... is not owned by current user").
+if [ "$(id -u)" -eq 0 ]; then
+  ./result/sw/bin/darwin-rebuild switch --flake .#${SYSTEM_TYPE} $@
+else
+  sudo --set-home ./result/sw/bin/darwin-rebuild switch --flake .#${SYSTEM_TYPE} $@
+fi
 
 echo "${YELLOW}Cleaning up...${NC}"
 unlink ./result

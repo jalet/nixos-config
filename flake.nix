@@ -89,6 +89,13 @@
                 (_: prev: {
                   nushell = prev.nushell.overrideAttrs (_: { doCheck = false; });
 
+                  # nixpkgs' helm 4.2.0 preCheck still patches test files under
+                  # cmd/helm/ that helm v4 moved to pkg/cmd/, so checkPhase aborts
+                  # on Darwin (substitute(): ERROR: file
+                  # 'cmd/helm/dependency_build_test.go' does not exist).
+                  # Still broken on nixpkgs master; drop once fixed upstream.
+                  kubernetes-helm = prev.kubernetes-helm.overrideAttrs (_: { doCheck = false; });
+
                   # nvim-treesitter's main branch requires tree-sitter-cli >= 0.26.1,
                   # but nixpkgs unstable still ships 0.25.10 with no PR in flight.
                   # Expose v0.26.8 as a separate attribute for the CLI only.

@@ -21,7 +21,7 @@ in {
   "${HOME}/.config/ghostty/config".text = ''
     font-family = Hack Nerd Font Mono
     font-size = 16
-    theme = Gruvbox Dark
+    theme = nord
     window-padding-x = 5
   '';
 
@@ -30,4 +30,5 @@ in {
   "${HOME}/.config/k9s/views.yaml".source = ./config/k9s/views.yaml;
   "${HOME}/.config/k9s/aliases.yaml".source = ./config/k9s/aliases.yaml;
   "${HOME}/.config/k9s/config.yaml".source = ./config/k9s/config.yaml;
+  "${HOME}/.config/k9s/skins/nord.yaml".source = ./config/k9s/skins/nord.yaml;
 }

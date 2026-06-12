@@ -6,7 +6,7 @@ views:
     sortColumn: NAME:asc
     columns:
       - NAME
-      - "WORKLOAD:.metadata.labels.node\.playgroundtech\.io/workload-type"
+      - 'WORKLOAD:.metadata.labels.node\.playgroundtech\.io/workload-type'
       - STATUS
       - TAINTS
       - VERSION

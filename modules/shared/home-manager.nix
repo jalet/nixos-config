@@ -93,6 +93,7 @@ in {
     enable = true;
     config = {
       style = "numbers,changes,header";
+      theme = "Nord";
     };
     extraPackages = builtins.attrValues {
       inherit
@@ -106,6 +107,13 @@ in {
     enable = true;
     enableZshIntegration = true;
     enableBashIntegration = true;
+    # Nord palette (bg=-1 keeps the terminal background transparent)
+    defaultOptions = [
+      "--color=fg:#D8DEE9,bg:-1,hl:#A3BE8C"
+      "--color=fg+:#ECEFF4,bg+:#3B4252,hl+:#A3BE8C"
+      "--color=info:#EBCB8B,prompt:#BF616A,pointer:#B48EAD"
+      "--color=marker:#A3BE8C,spinner:#B48EAD,header:#5E81AC"
+    ];
   };
 
   git = {
@@ -265,15 +273,15 @@ in {
 
       set-option -g status-position bottom
 
-      # Gruvbox dark palette (matches starship exactly)
-      # color_fg0    = #fbf1c7
-      # color_bg1    = #3c3836
-      # color_bg3    = #665c54
-      # color_orange = #d65d0e
-      # color_yellow = #d79921
-      # color_aqua   = #689d6a
-      # color_blue   = #458588
-      # color_purple = #b16286
+      # Nord palette (matches starship exactly)
+      # color_fg0    = #ECEFF4 (nord6)
+      # color_bg1    = #3B4252 (nord1)
+      # color_bg3    = #4C566A (nord3)
+      # color_orange = #D08770 (nord12)
+      # color_yellow = #EBCB8B (nord13)
+      # color_aqua   = #88C0D0 (nord8)
+      # color_blue   = #5E81AC (nord10)
+      # color_purple = #B48EAD (nord15)
 
       set -g status-style "bg=default"
       set -g status-left-length 40
@@ -281,28 +289,28 @@ in {
 
       # Rounded powerline separators: U+E0B4 () and U+E0B6 ()
       # Status left: session name in orange pill
-      set -g status-left "#[fg=#d65d0e,bg=default]#[fg=#fbf1c7,bg=#d65d0e,bold] #S #[fg=#d65d0e,bg=default] "
+      set -g status-left "#[fg=#D08770,bg=default]#[fg=#ECEFF4,bg=#D08770,bold] #S #[fg=#D08770,bg=default] "
 
       # Status right: empty
       set -g status-right ""
       set -g window-status-separator " "
 
       # Window base styles control cap colors; inline overrides handle fill only
-      set -g window-status-style "fg=#504945,bg=default,none"
-      set -g window-status-current-style "fg=#d79921,bg=default,bold"
+      set -g window-status-style "fg=#4C566A,bg=default,none"
+      set -g window-status-current-style "fg=#EBCB8B,bg=default,bold"
 
-      # Window: inactive — grey pill (caps inherit fg=#504945 from window-status-style)
-      set -g window-status-format "#[fg=#fbf1c7,bg=#504945] #I > #W #[default]"
+      # Window: inactive — grey pill (caps inherit fg=#4C566A from window-status-style)
+      set -g window-status-format "#[fg=#ECEFF4,bg=#4C566A] #I > #W #[default]"
 
-      # Window: active — yellow pill (caps inherit fg=#d79921 from window-status-current-style)
-      set -g window-status-current-format "#[fg=#1d2021,bg=#d79921] #I > #W #[default]"
+      # Window: active — yellow pill (caps inherit fg=#EBCB8B from window-status-current-style)
+      set -g window-status-current-format "#[fg=#2E3440,bg=#EBCB8B] #I > #W #[default]"
 
       # Pane borders
-      set -g pane-border-style "fg=#665c54"
-      set -g pane-active-border-style "fg=#d65d0e"
+      set -g pane-border-style "fg=#4C566A"
+      set -g pane-active-border-style "fg=#D08770"
 
       # Message style
-      set -g message-style "bg=#d79921,fg=#3c3836"
+      set -g message-style "bg=#EBCB8B,fg=#3B4252"
     '';
     plugins = with pkgs.tmuxPlugins; [
       sensible
@@ -319,9 +327,9 @@ in {
   ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
+    settings = {
       "*" = {
-        setEnv = {
+        SetEnv = {
           TERM = "xterm-256color";
         };
       };

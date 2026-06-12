@@ -1,0 +1,90 @@
+# Nord skin for k9s
+# Palette: https://www.nordtheme.com/
+# nord0  #2E3440  nord1  #3B4252  nord2  #434C5E  nord3  #4C566A
+# nord4  #D8DEE9  nord5  #E5E9F0  nord6  #ECEFF4
+# nord7  #8FBCBB  nord8  #88C0D0  nord9  #81A1C1  nord10 #5E81AC
+# nord11 #BF616A  nord12 #D08770  nord13 #EBCB8B  nord14 #A3BE8C  nord15 #B48EAD
+k9s:
+  # Transparent background to match the rest of the environment.
+  body:
+    fgColor: "#D8DEE9"
+    bgColor: default
+    logoColor: "#88C0D0"
+  prompt:
+    fgColor: "#D8DEE9"
+    bgColor: default
+    suggestColor: "#D08770"
+  info:
+    fgColor: "#B48EAD"
+    sectionColor: "#D8DEE9"
+  dialog:
+    fgColor: "#D8DEE9"
+    bgColor: default
+    buttonFgColor: "#D8DEE9"
+    buttonBgColor: "#B48EAD"
+    buttonFocusFgColor: "#ECEFF4"
+    buttonFocusBgColor: "#88C0D0"
+    labelFgColor: "#D08770"
+    fieldFgColor: "#D8DEE9"
+  frame:
+    border:
+      fgColor: "#4C566A"
+      focusColor: "#434C5E"
+    menu:
+      fgColor: "#D8DEE9"
+      keyColor: "#88C0D0"
+      numKeyColor: "#88C0D0"
+    crumbs:
+      fgColor: "#ECEFF4"
+      bgColor: "#434C5E"
+      activeColor: "#434C5E"
+    status:
+      newColor: "#88C0D0"
+      modifyColor: "#B48EAD"
+      addColor: "#A3BE8C"
+      errorColor: "#BF616A"
+      highlightColor: "#D08770"
+      killColor: "#4C566A"
+      completedColor: "#4C566A"
+    title:
+      fgColor: "#D8DEE9"
+      bgColor: default
+      highlightColor: "#D08770"
+      counterColor: "#B48EAD"
+      filterColor: "#88C0D0"
+  views:
+    charts:
+      bgColor: default
+      defaultDialColors:
+        - "#A3BE8C"
+        - "#BF616A"
+      defaultChartColors:
+        - "#A3BE8C"
+        - "#BF616A"
+    table:
+      fgColor: "#D8DEE9"
+      bgColor: default
+      cursorFgColor: "#2E3440"
+      cursorBgColor: "#434C5E"
+      header:
+        fgColor: "#D8DEE9"
+        bgColor: default
+        sorterColor: "#88C0D0"
+    xray:
+      fgColor: "#D8DEE9"
+      bgColor: default
+      cursorColor: "#434C5E"
+      graphicColor: "#B48EAD"
+      showIcons: false
+    yaml:
+      keyColor: "#88C0D0"
+      colonColor: "#5E81AC"
+      valueColor: "#D8DEE9"
+    logs:
+      fgColor: "#D8DEE9"
+      bgColor: default
+      indicator:
+        fgColor: "#D8DEE9"
+        bgColor: "#434C5E"
+        toggleOnColor: "#A3BE8C"
+        toggleOffColor: "#4C566A"
