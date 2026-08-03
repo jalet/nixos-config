@@ -40,6 +40,15 @@ in {
   # Turn off NIX_PATH warnings now that we're using flakes
   system.checks.verifyNixPath = false;
 
+  # nix-darwin's HTML manual passes --toc-depth to nixos-render-docs,
+  # which current nixpkgs removed (use --sidebar-depth). Skip the HTML
+  # manual until nix-darwin catches up; man pages are unaffected.
+  # darwin-uninstaller embeds its own default darwin-system (docs
+  # enabled), so it must go too. Run it on demand instead:
+  #   nix run nix-darwin#darwin-uninstaller
+  documentation.doc.enable = false;
+  system.tools.darwin-uninstaller.enable = false;
+
   # Load configuration that is shared across systems
   environment.systemPackages = with pkgs;
     [

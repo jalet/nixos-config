@@ -30,13 +30,14 @@ with pkgs; [
   zip
 
   # Encryption and security tools
+  # ssm-session-manager-plugin  # broken in nixpkgs - Go vendoring issue
   age
   gnupg
-  # ssm-session-manager-plugin  # broken in nixpkgs - Go vendoring issue
+  proton-pass-cli
+  sops
+  step-cli
   yubikey-agent
   yubikey-manager
-  step-cli
-  sops
 
   # Text and terminal utilities
   docker
