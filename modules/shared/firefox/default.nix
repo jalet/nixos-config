@@ -1,0 +1,344 @@
+# Declarative Firefox for consulting across concurrent customer tenancies.
+#
+# Baseline: cloud-gouv/securix modules/tools/firefox.nix, adapted from its
+# single-user government-hardening model. The securix original is a NixOS
+# module; this is home-manager on nix-darwin, so policies arrive through
+# nixpkgs' wrapFirefox rather than the NixOS programs.firefox option.
+#
+# Shape:
+#   one Firefox profile per tenancy   -> isolates history, bookmarks, client
+#                                        certs, extension state, proxy settings
+#   containers within each profile    -> isolate cookies and site storage
+#   granted-firefox (granted.nix)     -> routes AWS console URLs into the right
+#                                        profile, in a per-AWS-profile container
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
+  cfg = config.local.firefox;
+
+  containerType = types.submodule {
+    options = {
+      color = mkOption {
+        # Mirrors the enum in home-manager's firefox module, which in turn
+        # mirrors toolkit/components/extensions/parent/ext-contextualIdentities.js.
+        type = types.enum [
+          "blue"
+          "turquoise"
+          "green"
+          "yellow"
+          "orange"
+          "red"
+          "pink"
+          "purple"
+          "toolbar"
+        ];
+        default = "toolbar";
+        description = "Container colour in the tab strip.";
+      };
+
+      icon = mkOption {
+        type = types.enum [
+          "briefcase"
+          "cart"
+          "circle"
+          "dollar"
+          "fence"
+          "fingerprint"
+          "gift"
+          "vacation"
+          "food"
+          "fruit"
+          "pet"
+          "tree"
+          "chill"
+        ];
+        default = "circle";
+        description = "Container icon.";
+      };
+    };
+  };
+
+  tenancyType = types.submodule ({name, ...}: {
+    options = {
+      id = mkOption {
+        type = types.ints.unsigned;
+        description = ''
+          profiles.ini section number. Must be unique across tenancies; the
+          tenancy with id 0 becomes the default profile unless isDefault says
+          otherwise.
+        '';
+      };
+
+      isDefault = mkOption {
+        type = types.bool;
+        default = false;
+        description = "Whether this is the profile Firefox opens by default.";
+      };
+
+      path = mkOption {
+        type = types.str;
+        default = name;
+        example = "asyc414s.default";
+        description = ''
+          Directory name under Profiles/. Defaults to the tenancy name; set it
+          to adopt a profile that already exists on disk. profiles.ini is
+          generated, so a profile not named by some tenancy keeps its data but
+          becomes invisible to Firefox.
+        '';
+      };
+
+      awsPrefixes = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = ["coconut-" "papaya-"];
+        description = ''
+          AWS profile name prefixes routed to this Firefox profile by
+          granted-firefox. Longer prefixes are matched first, so overlapping
+          entries such as "pgg-coconut-" and "coconut-" resolve correctly.
+        '';
+      };
+
+      accent = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        example = "#5E81AC";
+        description = ''
+          Hex colour used to tint the window chrome and print the tenancy name
+          in the tab strip. Firefox exposes the profile name nowhere in a normal
+          window - not the title, not the bundle ID - so without this every
+          profile looks identical, which matters most when screen-sharing.
+        '';
+      };
+
+      containers = mkOption {
+        type = types.attrsOf containerType;
+        default = {};
+        description = ''
+          Containers to ensure exist in this profile. userContextIds are
+          assigned automatically and merged into any containers Granted has
+          already created - see containers.nix.
+        '';
+      };
+
+      bookmarks = mkOption {
+        type = types.attrsOf types.str;
+        default = {};
+        example = {Console = "https://console.aws.amazon.com";};
+        description = "Bookmarks toolbar entries for this profile, as name -> URL.";
+      };
+
+      settings = mkOption {
+        type = types.attrsOf types.anything;
+        default = {};
+        description = "Extra about:config settings, merged over the shared defaults.";
+      };
+    };
+  });
+
+  # Shared by every profile; a tenancy's own `settings` merge on top.
+  commonSettings = {
+    # Firefox 153 ships its selectable-profiles service enabled, and that
+    # service rewrites profiles.ini - the same file home-manager generates.
+    # Turn it off so the Nix-generated profiles.ini stays authoritative.
+    "browser.profiles.enabled" = false;
+
+    "privacy.userContext.enabled" = true;
+    "privacy.userContext.ui.enabled" = true;
+
+    # Pairs with the Certificates.ImportEnterpriseRoots policy.
+    "security.enterprise_roots.enabled" = true;
+
+    # Required for the per-tenancy userChrome.css accent to load at all.
+    "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+
+    # Restore the previous session; per-tenancy profiles are long-lived.
+    "browser.startup.page" = 3;
+
+    # Vertical tabs everywhere. revamp is the sidebar these depend on.
+    "sidebar.revamp" = true;
+    "sidebar.verticalTabs" = true;
+
+    # Firefox Home. Toggle-to-pref mapping read out of
+    # newtab/lib/AboutPreferences.sys.mjs in the shipped omni.ja.
+    "browser.newtabpage.activity-stream.showSearch" = true;
+    "browser.newtabpage.activity-stream.feeds.topsites" = false; # Shortcuts
+    "browser.newtabpage.activity-stream.feeds.section.highlights" = false; # Recent activity
+    "browser.newtabpage.activity-stream.feeds.section.topstories" = false; # Recommended stories
+    "browser.newtabpage.activity-stream.logowordmark.alwaysVisible" = false; # Firefox logo
+    # "Support Firefox" is a pair of nested sponsored prefs, not one toggle.
+    "browser.newtabpage.activity-stream.showSponsored" = false;
+    "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+    # Weather moved pref when nova.enabled went true by default in 153; set
+    # both so the toggle is off regardless of which branch is live.
+    "browser.newtabpage.activity-stream.widgets.weather.enabled" = false;
+    "browser.newtabpage.activity-stream.showWeather" = false;
+
+    # Address bar suggestions.
+    "browser.urlbar.suggest.history" = true;
+    "browser.urlbar.suggest.openpage" = true;
+    "browser.urlbar.suggest.topsites" = true;
+    "browser.urlbar.suggest.bookmark" = false;
+    "browser.urlbar.suggest.recentsearches" = false;
+    "browser.urlbar.suggest.engines" = false;
+    "browser.urlbar.suggest.quickactions" = false;
+  };
+
+  # Firefox puts the profile name in no window-visible surface, so tint the
+  # chrome and label the tab strip. Requires
+  # toolkit.legacyUserProfileCustomizations.stylesheets, set below.
+  mkUserChrome = name: tenancy:
+    optionalString (tenancy.accent != null) ''
+      /* Generated by modules/shared/firefox - identifies the "${name}" profile. */
+      :root {
+        --tenancy-accent: ${tenancy.accent};
+      }
+
+      /* Present in every tab layout, so this is the reliable signal. */
+      #navigator-toolbox {
+        border-top: 3px solid var(--tenancy-accent) !important;
+      }
+
+      #nav-bar {
+        border-bottom: 1px solid color-mix(in srgb, var(--tenancy-accent) 55%, transparent) !important;
+      }
+
+      /* One anchor for every profile and both tab layouts.
+         #TabsToolbar is not usable: vertical tabs collapse it to ~20px, so the
+         label renders but is invisible. #nav-bar::after is not usable either -
+         it lands past the hamburger at the far right of the window.
+         #nav-bar-customization-target exists in both layouts and starts
+         immediately after the macOS traffic lights, so ::before is always in
+         the same visible spot. Verified in both modes via Marionette. */
+      #nav-bar-customization-target::before {
+        content: "${toUpper name}";
+        color: var(--tenancy-accent);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        align-self: center;
+        white-space: nowrap;
+        padding: 0 10px;
+      }
+
+      :root:has(#vertical-tabs #tabbrowser-tabs) #vertical-tabs {
+        border-inline-start: 3px solid var(--tenancy-accent) !important;
+      }
+    '';
+
+  mkBookmarks = bookmarks:
+    optionalAttrs (bookmarks != {}) {
+      force = true;
+      settings = [
+        {
+          name = "toolbar";
+          toolbar = true;
+          bookmarks = mapAttrsToList (name: url: {inherit name url;}) bookmarks;
+        }
+      ];
+    };
+
+  # Containers are deliberately NOT passed to home-manager here. Its `containers`
+  # option writes containers.json as a read-only store symlink and omits
+  # Firefox's four built-in containers, so Granted - which creates a container
+  # per AWS profile at runtime - would have its work discarded on every
+  # activation. containers.nix merges instead. See that file.
+  mkProfile = name: tenancy: {
+    inherit name;
+    inherit (tenancy) id isDefault path;
+    settings = commonSettings // tenancy.settings;
+    bookmarks = mkBookmarks tenancy.bookmarks;
+    userChrome = mkUserChrome name tenancy;
+  };
+
+  mkLauncher = name: _:
+    pkgs.writeShellApplication {
+      name = "ff-${name}";
+      text = ''
+        exec ${escapeShellArg cfg.firefoxBin} -P ${escapeShellArg name} "$@"
+      '';
+    };
+in {
+  imports = [
+    ./containers.nix
+    ./granted.nix
+  ];
+
+  options.local.firefox = {
+    enable = mkEnableOption "declarative Firefox";
+
+    tenancies = mkOption {
+      type = types.attrsOf tenancyType;
+      default = {};
+      description = "Firefox profiles, one per customer tenancy.";
+    };
+
+    defaultTenancy = mkOption {
+      type = types.str;
+      description = ''
+        Tenancy that granted-firefox falls back to when an AWS profile matches
+        no awsPrefixes.
+      '';
+    };
+
+    dohExcludedDomains = mkOption {
+      type = types.listOf types.str;
+      description = ''
+        Domain suffixes that must never be resolved over DNS-over-HTTPS,
+        because only a local or VPN resolver knows them. Expect to extend this
+        as engagements come and go.
+      '';
+    };
+
+    firefoxBin = mkOption {
+      type = types.str;
+      readOnly = true;
+      description = "Path to the Firefox binary inside the wrapped app bundle.";
+    };
+
+    profilesPath = mkOption {
+      type = types.str;
+      readOnly = true;
+      description = "Absolute path to the directory holding the profile directories.";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.tenancies ? ${cfg.defaultTenancy};
+        message = "local.firefox.defaultTenancy '${cfg.defaultTenancy}' is not a declared tenancy.";
+      }
+      {
+        assertion = length (filter (t: t.isDefault) (attrValues cfg.tenancies)) == 1;
+        message = "local.firefox: exactly one tenancy must set isDefault = true.";
+      }
+    ];
+
+    local.firefox = {
+      firefoxBin = "${config.programs.firefox.finalPackage}/Applications/Firefox.app/Contents/MacOS/firefox";
+      profilesPath = "${config.home.homeDirectory}/${config.programs.firefox.profilesPath}";
+    };
+
+    programs.firefox = {
+      enable = true;
+      package = pkgs.firefox;
+
+      # home-manager hardcodes this to "org.mozilla.firefox.plist", but nixpkgs
+      # builds Firefox with --with-distribution-id=org.nixos, so the real bundle
+      # ID is org.nixos.firefox and that channel writes to a domain Firefox
+      # never reads. Disable it outright: policies.json inside the bundle is the
+      # working path, and Firefox's macOS provider *overrides* policies.json per
+      # top-level policy, so a stale second channel would silently win.
+      darwinDefaultsId = null;
+
+      policies = import ./policies.nix {inherit lib cfg;};
+      profiles = mapAttrs mkProfile cfg.tenancies;
+    };
+
+    home.packages = mapAttrsToList mkLauncher cfg.tenancies;
+  };
+}

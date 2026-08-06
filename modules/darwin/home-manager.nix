@@ -37,6 +37,61 @@ in {
       lib,
       ...
     }: {
+      imports = [
+        ../shared/firefox
+      ];
+
+      # Two profiles: work and personal. The split that matters is keeping
+      # customer work out of personal browsing - history, bookmarks, client
+      # certificates and extension state. Within playground, Granted creates a
+      # container per AWS profile on demand, so cookies stay separated per
+      # customer without declaring any of them here.
+      local.firefox = {
+        enable = true;
+
+        # Anything not claimed by a tenancy's awsPrefixes lands in playground.
+        # Note pgg-coconut-* matches neither "coconut-" nor any other prefix,
+        # so it correctly falls through here rather than into playlabs.
+        defaultTenancy = "playground";
+
+        # Names only a local or VPN resolver knows. Firefox matches these as
+        # suffixes at label boundaries, so "internal" covers *.internal.
+        # Extend this as engagements come and go.
+        dohExcludedDomains = [
+          "internal"
+          "ts.net" # Tailscale MagicDNS
+          "lan"
+          "local"
+          "home.arpa"
+        ];
+
+        # accent tints the window chrome and labels the tab strip, because
+        # Firefox exposes the profile name nowhere in a normal window. Nord
+        # palette, matching tmux/fzf/bat elsewhere in this config.
+        tenancies = {
+          personal = {
+            id = 0;
+            isDefault = true;
+            accent = "#B48EAD"; # nord15 purple
+            # Own AWS account. Both cases listed because the profile is
+            # JarsaterInfrastructereAdministrator while the sso-session is
+            # lowercase, and bash case matching is case-sensitive.
+            awsPrefixes = ["Jarsater" "jarsater-"];
+          };
+
+          playground = {
+            id = 1;
+            accent = "#5E81AC"; # nord10 blue
+          };
+
+          playlabs = {
+            id = 2;
+            accent = "#D08770"; # nord12 orange
+            awsPrefixes = ["coconut-" "lulo-"];
+          };
+        };
+      };
+
       home = {
         enableNixpkgsReleaseCheck = false;
         packages = pkgs.callPackage ./packages.nix {};

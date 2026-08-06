@@ -12,7 +12,9 @@ with pkgs; [
   eza
   fastfetch
   fd
-  firefox
+  # firefox is installed by modules/shared/firefox, which needs to override the
+  # package to bake in policies.json. Listing it here too would collide on
+  # Applications/Firefox.app during home-manager activation.
   fzf
   granted
   iftop
