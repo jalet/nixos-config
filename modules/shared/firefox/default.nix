@@ -2,8 +2,8 @@
 #
 # Baseline: cloud-gouv/securix modules/tools/firefox.nix, adapted from its
 # single-user government-hardening model. The securix original is a NixOS
-# module; this is home-manager on nix-darwin, so policies arrive through
-# nixpkgs' wrapFirefox rather than the NixOS programs.firefox option.
+# module; this is home-manager on nix-darwin, so policies arrive through the
+# macOS defaults channel rather than the NixOS programs.firefox option.
 #
 # Shape:
 #   one Firefox profile per tenancy   -> isolates history, bookmarks, client
@@ -19,6 +19,19 @@
 }:
 with lib; let
   cfg = config.local.firefox;
+
+  # pkgs.firefox and pkgs.firefox-bin both go through nixpkgs' wrapFirefox,
+  # which on Darwin rebuilds Firefox.app as a symlink tree and replaces
+  # Contents/MacOS/firefox with a generated wrapper. That strips the code
+  # signature, and macOS TCC will not create Microphone or Camera entries for an
+  # unsigned bundle - Firefox never appears in System Settings > Privacy &
+  # Security at all, with no error logged anywhere to explain why.
+  #
+  # firefox-bin-unwrapped is the only attribute that escapes the wrapper: its
+  # Darwin branch undmgs Mozilla's official build and sets dontFixup ("don't
+  # break code signing"), keeping the Developer ID signature and the real
+  # org.mozilla.firefox bundle ID. Do not simplify this back to pkgs.firefox.
+  firefoxPkg = pkgs.firefox-bin-unwrapped;
 
   containerType = types.submodule {
     options = {
@@ -319,26 +332,35 @@ in {
     ];
 
     local.firefox = {
-      firefoxBin = "${config.programs.firefox.finalPackage}/Applications/Firefox.app/Contents/MacOS/firefox";
+      firefoxBin = "${firefoxPkg}/Applications/Firefox.app/Contents/MacOS/firefox";
       profilesPath = "${config.home.homeDirectory}/${config.programs.firefox.profilesPath}";
     };
 
     programs.firefox = {
       enable = true;
-      package = pkgs.firefox;
 
-      # home-manager hardcodes this to "org.mozilla.firefox.plist", but nixpkgs
-      # builds Firefox with --with-distribution-id=org.nixos, so the real bundle
-      # ID is org.nixos.firefox and that channel writes to a domain Firefox
-      # never reads. Disable it outright: policies.json inside the bundle is the
-      # working path, and Firefox's macOS provider *overrides* policies.json per
-      # top-level policy, so a stale second channel would silently win.
-      darwinDefaultsId = null;
+      # null stops home-manager applying wrapFirefox to firefoxPkg - it wraps
+      # any package that is not already wrapped, which would undo the whole
+      # point of firefoxPkg. The app comes from home.packages below instead.
+      package = null;
+
+      # Unwrapped means no policies.json inside the bundle: firefox-bin's Darwin
+      # installPhase only moves the .app, and the policies.json link is on its
+      # Linux branch. So Firefox's macOS provider is the only policy channel
+      # left, and nothing remains for it to override. It reads the app's own
+      # preferences domain, which for Mozilla's build really is
+      # org.mozilla.firefox - pkgs.firefox is built with
+      # --with-distribution-id=org.nixos and so ignored this domain entirely,
+      # which is why it used to be disabled here.
+      #
+      # Inspect the result with `defaults read org.mozilla.firefox`, and what
+      # Firefox made of it with about:policies.
+      darwinDefaultsId = "org.mozilla.firefox";
 
       policies = import ./policies.nix {inherit lib cfg;};
       profiles = mapAttrs mkProfile cfg.tenancies;
     };
 
-    home.packages = mapAttrsToList mkLauncher cfg.tenancies;
+    home.packages = [firefoxPkg] ++ mapAttrsToList mkLauncher cfg.tenancies;
   };
 }

@@ -1,9 +1,11 @@
 # Firefox enterprise policies, adapted from cloud-gouv/securix
 # modules/tools/firefox.nix.
 #
-# These are global to the Firefox binary, so every profile shares them. nixpkgs'
-# wrapFirefox writes them to Firefox.app/Contents/Resources/distribution/policies.json
-# (see nixpkgs pkgs/applications/networking/browsers/firefox/wrapper.nix).
+# These are global to the Firefox binary, so every profile shares them. Firefox
+# is unwrapped here (see default.nix), so there is no policies.json in the
+# bundle: home-manager writes these to the org.mozilla.firefox defaults domain
+# instead and Firefox's macOS provider picks them up. Read back with
+# `defaults read org.mozilla.firefox`.
 #
 # Every key here was validated against modules/policies/policies-schema.json in
 # the shipped omni.ja. Unknown keys are silently dropped by Firefox, so check
