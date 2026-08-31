@@ -63,6 +63,7 @@ with pkgs; [
   bun
   go
   goreleaser
+  harper
   lua
   luarocks
   nodejs_22
