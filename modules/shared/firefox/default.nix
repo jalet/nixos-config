@@ -175,6 +175,13 @@ with lib; let
     "sidebar.revamp" = true;
     "sidebar.verticalTabs" = true;
 
+    # Keep the tab strip collapsed to icons instead of the ~239px expanded
+    # launcher. "expand-on-hover" is a real pref, unlike the collapsed state
+    # under "always-show", which only lives inside the sidebar.backupState JSON
+    # blob. Hovering the strip expands it as an overlay, so labels are still
+    # one mouse-move away.
+    "sidebar.visibility" = "expand-on-hover";
+
     # Firefox Home. Toggle-to-pref mapping read out of
     # newtab/lib/AboutPreferences.sys.mjs in the shipped omni.ja.
     "browser.newtabpage.activity-stream.showSearch" = true;

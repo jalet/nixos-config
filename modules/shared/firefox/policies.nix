@@ -82,6 +82,20 @@ in {
     Locked = false;
   };
 
+  # -- Generative AI ----------------------------------------------------------
+  # Drops the chatbot sparkle from the sidebar. browser-sidebar.js registers
+  # that tool with registerPrefSidebar("browser.ml.chat.enabled", ...), so
+  # clearing the pref unregisters the sidebar outright and the icon goes with
+  # it - no need to edit sidebar.main.tools, which would also freeze the
+  # extension entries Firefox maintains in that list.
+  #
+  # AIControls rather than GenerativeAI: Policies.sys.mjs ignores GenerativeAI
+  # whenever AIControls is present, so declaring both would be misleading.
+  AIControls.SidebarChatbot = {
+    Value = "blocked";
+    Locked = true;
+  };
+
   # -- Certificates -----------------------------------------------------------
   # Trust customer root CAs already installed in the macOS Keychain. Without
   # this, every internal-PKI host on a customer VPN throws a cert error.
