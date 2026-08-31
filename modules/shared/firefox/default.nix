@@ -263,7 +263,7 @@ with lib; let
     inherit name;
     inherit (tenancy) id isDefault path;
     settings = commonSettings // tenancy.settings;
-    bookmarks = mkBookmarks tenancy.bookmarks;
+    bookmarks = mkBookmarks (cfg.bookmarks // tenancy.bookmarks);
     userChrome = mkUserChrome name tenancy;
   };
 
@@ -310,6 +310,19 @@ in {
       description = ''
         Tenancy that granted-firefox falls back to when an AWS profile matches
         no awsPrefixes.
+      '';
+    };
+
+    bookmarks = mkOption {
+      type = types.attrsOf types.str;
+      default = {};
+      example = {GitHub = "https://github.com";};
+      description = ''
+        Bookmarks present in every profile, merged with each tenancy's own.
+
+        Firefox re-imports these on every start and the import runs with
+        replace: true, so the declared set is authoritative - bookmarks added
+        by hand do not survive a restart.
       '';
     };
 

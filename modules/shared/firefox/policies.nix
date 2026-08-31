@@ -99,7 +99,17 @@ in {
   DisableAppUpdate = true;
   DisableProfileImport = true;
   DisableProfileRefresh = true;
-  NoDefaultBookmarks = true;
+
+  # NoDefaultBookmarks is deliberately absent. securix sets it, but it calls
+  # disallowFeature("defaultBookmarks"), and PlacesBrowserStartup gates the
+  # entire bookmarks.html import on isAllowed("defaultBookmarks") - the same
+  # import home-manager uses for declarative bookmarks. home-manager therefore
+  # forces it to false whenever a profile declares bookmarks; setting it here
+  # too would collide with that definition.
+  #
+  # Mozilla's own starter bookmarks still do not return: that path needs
+  # restoreDefaultBookmarks, which cannot be set while
+  # browser.places.importBookmarksHTML points the import at our generated file.
 
   # -- Noise ------------------------------------------------------------------
   DisableTelemetry = true;
@@ -110,8 +120,9 @@ in {
 
   # "never" | "always" | "newtab". Firefox treats this as a default rather than
   # a lock, and re-applies only when the value itself changes
-  # (runOncePerModification), so toggling it by hand afterwards sticks.
-  DisplayBookmarksToolbar = "never";
+  # (runOncePerModification), so toggling it by hand afterwards sticks. The
+  # change from "never" is itself a modification, so it does re-apply.
+  DisplayBookmarksToolbar = "always";
 
   UserMessaging = {
     ExtensionRecommendations = false;

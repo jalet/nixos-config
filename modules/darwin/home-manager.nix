@@ -54,6 +54,11 @@ in {
         # so it correctly falls through here rather than into playlabs.
         defaultTenancy = "playground";
 
+        # Present in every profile. Firefox re-imports the generated
+        # bookmarks.html on every start with replace: true, so this set is
+        # authoritative and bookmarks added by hand are dropped on restart.
+        bookmarks.GitHub = "https://github.com";
+
         # Names only a local or VPN resolver knows. Firefox matches these as
         # suffixes at label boundaries, so "internal" covers *.internal.
         # Extend this as engagements come and go.
@@ -73,21 +78,43 @@ in {
             id = 0;
             isDefault = true;
             accent = "#B48EAD"; # nord15 purple
-            # Own AWS account. Both cases listed because the profile is
-            # JarsaterInfrastructereAdministrator while the sso-session is
-            # lowercase, and bash case matching is case-sensitive.
             awsPrefixes = ["Jarsater" "jarsater-"];
+            bookmarks = {
+              "AWS" = "https://jarsater.awsapps.com/start/#/";
+              "Grafana" = "https://grafana.jarsater.lan";
+              "Hubble" = "https://hubble.jarsater.lan";
+              "Kargo" = "https://kargo.jarsater.lan";
+              "Keycloak" = "https://keycloak.jarsater.lan";
+              "Longhorn" = "https://longhorn.jarsater.lan/";
+              "Proxmox" = "https://pve.jarsater.lan:8006";
+              "Vault" = "https://vault.jarsater.lan";
+            };
           };
 
           playground = {
             id = 1;
             accent = "#5E81AC"; # nord10 blue
+            bookmarks = {
+              "Github" = "https://github.com/";
+              "Microsoft Apps" = "https://myapps.microsoft.com/";
+              "PGT - MGMT - ArgoCD" = "https://argo-of-argos.mgmt.aws.playgroundtech.cloud/";
+              "PGT Docs" = "https://docs.playgroundtech.cloud/";
+              "PGT Gitlab" = "https://gitlab.playgroundtech.cloud/";
+            };
           };
 
           playlabs = {
             id = 2;
             accent = "#D08770"; # nord12 orange
             awsPrefixes = ["coconut-" "lulo-"];
+            bookmarks = {
+              "Coconut - ArgoCD" = "https://argocd.internal.by.playgroundgroup.io/";
+              "Coconut - Docs" = "https://docs.internal.by.playgroundgroup.io/";
+              "Coconut - Grafana" = "https://grafana.internal.by.playgroundgroup.io/";
+              "Coconut - Lägescentral" = "https://l%C3%A4gescentral.net";
+              "Github" = "https://github.com/";
+              "Tailscale" = "https://console.tailscale.com";
+            };
           };
         };
       };
