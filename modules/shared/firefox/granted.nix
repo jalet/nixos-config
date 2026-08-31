@@ -111,7 +111,11 @@ with lib; let
         url="ext+granted-containers:name=$aws_profile&url=$encoded&color=&icon="
       fi
 
-      exec ${escapeShellArg cfg.firefoxBin} -P "$profile_dir" --new-tab "$url"
+      # Detached for the same reason as the ff-<name> launchers in ./default.nix:
+      # Granted's own fork covers the console flow, but a hand-run
+      # granted-firefox would otherwise die with the terminal that started it.
+      nohup ${escapeShellArg cfg.firefoxBin} -P "$profile_dir" --new-tab "$url" \
+        </dev/null >/dev/null 2>&1 &
     '';
   };
 
@@ -148,8 +152,11 @@ with lib; let
     for table in ("AWSConsoleBrowserLaunchTemplate", "SSOBrowserLaunchTemplate"):
         template = data.setdefault(table, {})
         template["Command"] = command
-        # True is correct because the dispatcher execs the Firefox binary
-        # directly. It must be False only when the command is macOS `open`.
+        # True is correct because the dispatcher invokes the Firefox binary
+        # directly. It must be False only when the command is macOS `open`,
+        # which needs a Mach bootstrap connection that Granted's detached fork
+        # does not have. The dispatcher backgrounding Firefox rather than
+        # exec'ing it does not change that.
         template["UseForkProcess"] = True
 
     after = tomli_w.dumps(data)

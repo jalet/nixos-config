@@ -267,11 +267,27 @@ with lib; let
     userChrome = mkUserChrome name tenancy;
   };
 
+  # A Firefox exec'd from a terminal becomes that tty's foreground job, so
+  # closing the window SIGHUPs it and the browser dies with the shell. nohup
+  # plus background detaches instead: this script exits immediately, leaving
+  # Firefox SIGHUP-immune and reparented to launchd.
+  #
+  # macOS `open -na` would also detach, but -n forces a new LaunchServices
+  # instance per launch and so bypasses Firefox's per-profile handoff - a second
+  # process carrying -P hands its command line to whichever instance holds that
+  # profile's lock, raising the existing window instead of colliding with it.
+  # That handoff is what makes a repeat ff-<name> do the right thing, and it is
+  # only reachable by invoking the binary directly.
+  #
+  # </dev/null keeps the dead tty off Firefox's stdin; the stdout redirect is
+  # also what stops nohup writing a nohup.out into $PWD. The cost is that
+  # Firefox's stderr is discarded rather than landing in the terminal.
   mkLauncher = name: _:
     pkgs.writeShellApplication {
       name = "ff-${name}";
       text = ''
-        exec ${escapeShellArg cfg.firefoxBin} -P ${escapeShellArg name} "$@"
+        nohup ${escapeShellArg cfg.firefoxBin} -P ${escapeShellArg name} "$@" \
+          </dev/null >/dev/null 2>&1 &
       '';
     };
 in {
