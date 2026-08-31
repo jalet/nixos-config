@@ -28,12 +28,14 @@ in {
 
     rules:
       anchors: enable
-      braces: enable
+      braces:
+        max-spaces-inside: 1
       brackets: enable
       colons: enable
       commas: enable
       comments:
         level: warning
+        min-spaces-from-content: 1
       comments-indentation:
         level: warning
       document-end: disable
