@@ -39,6 +39,7 @@ in {
     }: {
       imports = [
         ../shared/firefox
+        ../shared/tmux-sessions.nix
       ];
 
       # Two profiles: work and personal. The split that matters is keeping
@@ -115,6 +116,111 @@ in {
               "Github" = "https://github.com/";
               "Tailscale" = "https://console.tailscale.com";
             };
+          };
+        };
+      };
+
+      # One session per working context, ordered so the first window is where
+      # the day usually starts. Coconut and Pineapple share a root because they
+      # are two customers whose repos sit side by side under ~/projects/coconut;
+      # the window list, not the path, is what separates them.
+      local.tmux = {
+        enable = true;
+
+        sessions = {
+          Coconut = {
+            root = "${config.home.homeDirectory}/projects/coconut";
+            windows = [
+              # Highest-churn repo in the tree by a wide margin, and what
+              # ArgoCD actually deploys from.
+              {
+                name = "helm";
+                path = "helm-charts";
+              }
+              # Pulumi Go landing zone. No runner: the stacks live under
+              # accounts/<env>/<stack>, so `pulumi preview` only means anything
+              # once you have cd'd into one.
+              {
+                name = "aws";
+                path = "aws";
+              }
+              {
+                name = "platform";
+                path = "platform";
+              }
+              {
+                name = "docs";
+                path = "project";
+              }
+              {
+                name = "keycloak";
+                path = "keycloak";
+                runner = "pulumi preview";
+              }
+            ];
+          };
+
+          Pineapple = {
+            root = "${config.home.homeDirectory}/projects/coconut";
+            windows = [
+              {
+                name = "uc";
+                path = "pineapple-uc";
+                runner = "mise run docs";
+              }
+              {
+                name = "infra";
+                path = "pineapple-infra";
+              }
+              # Brand assets rather than code, so nvim would only ever be in
+              # the way here.
+              {
+                name = "brand";
+                path = "pineapple";
+                editor = false;
+              }
+            ];
+          };
+
+          Jarsater = {
+            root = "${config.home.homeDirectory}/projects/jarsater";
+            windows = [
+              {
+                name = "s76";
+                path = "k8s/s76";
+                runner = "mise run check:generated";
+              }
+              {
+                name = "fabric";
+                path = "mcp-fabric";
+                runner = "mise run ci";
+              }
+              {
+                name = "scm";
+                path = "scm-metrics-exporter";
+                runner = "mise run ci";
+              }
+              {
+                name = "verisure";
+                path = "verisure-exporter";
+                runner = "cargo test";
+              }
+              {
+                name = "nibe";
+                path = "nibe-exporter";
+                runner = "cargo test";
+              }
+              {
+                name = "whyx";
+                path = "whyx";
+                runner = "mise run ci";
+              }
+              {
+                name = "nixos";
+                path = "homelab-nixos";
+                runner = "nix flake check";
+              }
+            ];
           };
         };
       };

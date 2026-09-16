@@ -10,7 +10,9 @@ This configuration gets imported by both modules. Some configuration examples in
 ├── cachix             # Defines cachix, a global cache for builds
 ├── default.nix        # Defines how we import overlays 
 ├── files.nix          # Non-Nix, static configuration files (now immutable!)
+├── firefox            # Declarative Firefox, one profile per customer tenancy
 ├── home-manager.nix   # The goods; most all shared config lives here
 ├── packages.nix       # List of packages to share
+├── tmux-sessions.nix  # tmux-<name> launchers that rebuild a session's layout
 
 ```
