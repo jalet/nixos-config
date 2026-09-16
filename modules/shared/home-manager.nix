@@ -24,55 +24,56 @@ in {
     };
 
     initContent = lib.mkBefore (''
-      # Add local completions directory to fpath
-      mkdir -p "$HOME/.zsh/completions"
-      fpath=("$HOME/.zsh/completions" $fpath)
+        # Add local completions directory to fpath
+        mkdir -p "$HOME/.zsh/completions"
+        fpath=("$HOME/.zsh/completions" $fpath)
 
-      if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
-        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-        . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
-      fi
-
-      # Define variables for directories
-      export PATH=$PATH:$HOME/.local/bin
-      export PATH=$HOME/.local/share/bin:$PATH
-      export PATH=$PATH:$HOME/.local/npm/bin
-      export PATH=$PATH:$HOME/.cargo/bin
-      export PATH=$PATH:$HOME/go/bin
-      export PATH=$PATH:/opt/homebrew/bin
-
-      # Remove history data we don't want to see
-      export HISTIGNORE="pwd:ls:cd"
-
-      export GPG_TTY="$(tty)"
-      export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-
-      # Heavy one-shot setup: only run in the outermost shell, not in every tmux pane.
-      # Tmux panes inherit the env set here, so DOCKER_HOST/GPG_TTY survive into them.
-      if [[ -z "$TMUX" ]]; then
-        gpgconf --launch gpg-agent
-        gpg-connect-agent updatestartuptty /bye > /dev/null
-        if command -v podman >/dev/null 2>&1; then
-          _podman_sock=$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}' 2>/dev/null)
-          [[ -n "$_podman_sock" ]] && export DOCKER_HOST="unix://$_podman_sock"
-          unset _podman_sock
+        if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
+          . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+          . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
         fi
-      fi
 
-      # AWS CLI uses a callback completer, not a static file
-      command -v aws_completer >/dev/null 2>&1 && complete -C aws_completer aws
+        # Define variables for directories
+        export PATH=$PATH:$HOME/.local/bin
+        export PATH=$HOME/.local/share/bin:$PATH
+        export PATH=$PATH:$HOME/.local/npm/bin
+        export PATH=$PATH:$HOME/.cargo/bin
+        export PATH=$PATH:$HOME/go/bin
+        export PATH=$PATH:/opt/homebrew/bin
 
-      # Granted assume alias
-      alias assume="source ${pkgs.granted}/bin/assume"
-    '' + lib.optionalString pkgs.stdenv.isDarwin ''
+        # Remove history data we don't want to see
+        export HISTIGNORE="pwd:ls:cd"
 
-      totp() {
-        local account
-        account=$(ykman oath accounts list | fzf) || return
-        ykman oath accounts code -s "$account" | tr -d '\n' | pbcopy
-        echo "copied TOTP for: $account"
-      }
-    '');
+        export GPG_TTY="$(tty)"
+        export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+
+        # Heavy one-shot setup: only run in the outermost shell, not in every tmux pane.
+        # Tmux panes inherit the env set here, so DOCKER_HOST/GPG_TTY survive into them.
+        if [[ -z "$TMUX" ]]; then
+          gpgconf --launch gpg-agent
+          gpg-connect-agent updatestartuptty /bye > /dev/null
+          if command -v podman >/dev/null 2>&1; then
+            _podman_sock=$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}' 2>/dev/null)
+            [[ -n "$_podman_sock" ]] && export DOCKER_HOST="unix://$_podman_sock"
+            unset _podman_sock
+          fi
+        fi
+
+        # AWS CLI uses a callback completer, not a static file
+        command -v aws_completer >/dev/null 2>&1 && complete -C aws_completer aws
+
+        # Granted assume alias
+        alias assume="source ${pkgs.granted}/bin/assume"
+      ''
+      + lib.optionalString pkgs.stdenv.isDarwin ''
+
+        totp() {
+          local account
+          account=$(ykman oath accounts list | fzf) || return
+          ykman oath accounts code -s "$account" | tr -d '\n' | pbcopy
+          echo "copied TOTP for: $account"
+        }
+      '');
 
     shellAliases = {
       ls = "eza --color=always --icons=always";
@@ -159,7 +160,7 @@ in {
         editor = "nvim";
         autocrlf = "input";
       };
-      
+
       pull = {
         rebase = true;
         autoSetupRemote = true;
