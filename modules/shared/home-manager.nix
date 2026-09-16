@@ -89,6 +89,28 @@ in {
     };
   };
 
+  # Several coconut repos carry an .envrc that builds a per-directory
+  # .aws/config and .kube/config and exports AWS_CONFIG_FILE and KUBECONFIG
+  # scoped to that repo, which is what keeps one customer's console session out
+  # of another's. Without direnv those files are inert and every repo shares
+  # whatever global AWS context happens to be active.
+  #
+  # The hook runs on precmd, so it fires per shell rather than per session:
+  # each tmux pane opened in a repo by tmux-sessions.nix loads that repo's
+  # environment on its own. An .envrc still has to be approved once with
+  # `direnv allow`, by design - it is arbitrary shell code from a git repo.
+  direnv = {
+    enable = true;
+    enableZshIntegration = true;
+
+    # Caches the flake devShell in the Nix store and keeps it from being
+    # garbage-collected, turning a repeat `cd` into a hash lookup rather than a
+    # re-evaluation. Matters for the flake-based repos - homelab-nixos,
+    # mcp-fabric, pgoauth, jarvis - where a cold evaluation is slow enough to
+    # feel like a hang on every directory change.
+    nix-direnv.enable = true;
+  };
+
   bat = {
     enable = true;
     config = {
