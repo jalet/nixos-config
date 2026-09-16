@@ -24,6 +24,7 @@ in {
 
   homebrew = {
     enable = true;
+    brews = pkgs.callPackage ./brews.nix {};
     casks = pkgs.callPackage ./casks.nix {};
   };
 
