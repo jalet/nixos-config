@@ -33,6 +33,8 @@ with lib; let
   # org.mozilla.firefox bundle ID. Do not simplify this back to pkgs.firefox.
   firefoxPkg = pkgs.firefox-bin-unwrapped;
 
+  inherit (import ./launcher.nix {inherit lib pkgs cfg;}) mkLaunchScript;
+
   containerType = types.submodule {
     options = {
       color = mkOption {
@@ -279,26 +281,32 @@ with lib; let
   # plus background detaches instead: this script exits immediately, leaving
   # Firefox SIGHUP-immune and reparented to launchd.
   #
-  # macOS `open -na` would also detach, but -n forces a new LaunchServices
-  # instance per launch and so bypasses Firefox's per-profile handoff - a second
-  # process carrying -P hands its command line to whichever instance holds that
-  # profile's lock, raising the existing window instead of colliding with it.
-  # That handoff is what makes a repeat ff-<name> do the right thing, and it is
-  # only reachable by invoking the binary directly.
-  #
   # </dev/null keeps the dead tty off Firefox's stdin; the stdout redirect is
   # also what stops nohup writing a nohup.out into $PWD. The cost is that
   # Firefox's stderr is discarded rather than landing in the terminal.
-  mkLauncher = name: _:
+  #
+  # Detaching is all that belongs here. Which of the two ways to start a profile
+  # to use - hand off to the instance already holding it, or cold start through
+  # `open` - is decided in ./launcher.nix, because the bundles in ./apps.nix
+  # need the same decision and must not detach: LaunchServices already has.
+  #
+  # An earlier version of this comment argued that invoking the binary directly
+  # was sufficient on its own, since a second process carrying -P would hand its
+  # command line to whichever instance held that profile's lock. That holds when
+  # the handoff is reached, but it is not reached reliably: launching a second
+  # tenancy while another was running collided on a profile lock and raised
+  # "A copy of Firefox is already open". ./launcher.nix decides explicitly now.
+  mkLauncher = name: tenancy:
     pkgs.writeShellApplication {
       name = "ff-${name}";
       text = ''
-        nohup ${escapeShellArg cfg.firefoxBin} -P ${escapeShellArg name} "$@" \
+        nohup ${escapeShellArg (getExe' (mkLaunchScript name tenancy) "ff-launch-${name}")} "$@" \
           </dev/null >/dev/null 2>&1 &
       '';
     };
 in {
   imports = [
+    ./apps.nix
     ./containers.nix
     ./granted.nix
   ];
@@ -348,6 +356,15 @@ in {
       description = "Path to the Firefox binary inside the wrapped app bundle.";
     };
 
+    firefoxApp = mkOption {
+      type = types.str;
+      readOnly = true;
+      description = ''
+        Path to Mozilla's Firefox.app bundle. Distinct from firefoxBin because
+        `open -a` wants the bundle, not the executable inside it.
+      '';
+    };
+
     profilesPath = mkOption {
       type = types.str;
       readOnly = true;
@@ -368,6 +385,7 @@ in {
     ];
 
     local.firefox = {
+      firefoxApp = "${firefoxPkg}/Applications/Firefox.app";
       firefoxBin = "${firefoxPkg}/Applications/Firefox.app/Contents/MacOS/firefox";
       profilesPath = "${config.home.homeDirectory}/${config.programs.firefox.profilesPath}";
     };

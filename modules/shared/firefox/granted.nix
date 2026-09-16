@@ -28,9 +28,14 @@ with lib; let
     )
   );
 
+  inherit (import ./launcher.nix {inherit lib pkgs cfg;}) mkLaunchScript;
+
+  launcherOf = name:
+    escapeShellArg (getExe' (mkLaunchScript name cfg.tenancies.${name}) "ff-launch-${name}");
+
   caseArms =
     concatMapStringsSep "\n"
-    (route: "    ${escapeShellArg route.prefix}*) profile_dir=${escapeShellArg route.name} ;;")
+    (route: "    ${escapeShellArg route.prefix}*) launcher=${launcherOf route.name} ;;")
     routes;
 
   dispatcher = pkgs.writeShellApplication {
@@ -96,7 +101,7 @@ with lib; let
 
       case "$aws_profile" in
       ${caseArms}
-          *) profile_dir=${escapeShellArg cfg.defaultTenancy} ;;
+          *) launcher=${launcherOf cfg.defaultTenancy} ;;
       esac
 
       if [ -n "$wrap_in_container" ]; then
@@ -114,7 +119,14 @@ with lib; let
       # Detached for the same reason as the ff-<name> launchers in ./default.nix:
       # Granted's own fork covers the console flow, but a hand-run
       # granted-firefox would otherwise die with the terminal that started it.
-      nohup ${escapeShellArg cfg.firefoxBin} -P "$profile_dir" --new-tab "$url" \
+      #
+      # FF_LAUNCH_NO_OPEN keeps ./launcher.nix off `open` on the cold-start
+      # path, for the same reason UseForkProcess has to stay True below: the
+      # fork Granted detaches us with has no Mach bootstrap connection and
+      # `open` requires one. Nothing is lost here - that flag only exists to put
+      # TCC's responsible process on Mozilla's signed bundle for microphone and
+      # camera prompts, and an AWS console tab raises neither.
+      FF_LAUNCH_NO_OPEN=1 nohup "$launcher" --new-tab "$url" \
         </dev/null >/dev/null 2>&1 &
     '';
   };
