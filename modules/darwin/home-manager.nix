@@ -98,6 +98,7 @@ in {
             accent = "#5E81AC"; # nord10 blue
             bookmarks = {
               "Github" = "https://github.com/";
+              "MCF / AWS" = "https://d-c3676db63b.awsapps.com/start/#/";
               "Microsoft Apps" = "https://myapps.microsoft.com/";
               "PGT - MGMT - ArgoCD" = "https://argo-of-argos.mgmt.aws.playgroundtech.cloud/";
               "PGT Docs" = "https://docs.playgroundtech.cloud/";
@@ -110,6 +111,11 @@ in {
             accent = "#D08770"; # nord12 orange
             awsPrefixes = ["coconut-" "lulo-"];
             bookmarks = {
+              "Argo" = {
+                "Dev" = "https://argo-dev.mgmt.corp.internal";
+                "Prod" = "https://argo-prod.mgmt.corp.internal";
+                "of Argos" = "https://argo-of-argos.mgmt.corp.internal";
+              };
               "Coconut - ArgoCD" = "https://argocd.internal.by.playgroundgroup.io/";
               "Coconut - Docs" = "https://docs.internal.by.playgroundgroup.io/";
               "Coconut - Grafana" = "https://grafana.internal.by.playgroundgroup.io/";
