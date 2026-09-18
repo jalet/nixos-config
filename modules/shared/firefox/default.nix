@@ -75,6 +75,17 @@ with lib; let
     };
   };
 
+  # A bookmark value is either a URL or a nested folder, so the type refers to
+  # itself. The description has to be overridden: attrsOf builds its own
+  # description from elemType.description, and following that through the
+  # self-reference never terminates. Same trick pkgs.formats.json uses for its
+  # recursive valueType.
+  bookmarkTreeType = with types;
+    attrsOf (either str bookmarkTreeType)
+    // {
+      description = "bookmark tree: name -> URL, or name -> nested set";
+    };
+
   tenancyType = types.submodule ({name, ...}: {
     options = {
       id = mkOption {
@@ -138,10 +149,17 @@ with lib; let
       };
 
       bookmarks = mkOption {
-        type = types.attrsOf types.str;
+        type = bookmarkTreeType;
         default = {};
-        example = {Console = "https://console.aws.amazon.com";};
-        description = "Bookmarks toolbar entries for this profile, as name -> URL.";
+        example = {
+          Console = "https://console.aws.amazon.com";
+          Argo = {Prod = "https://argo-prod.example.internal";};
+        };
+        description = ''
+          Bookmarks toolbar entries for this profile, as name -> URL. A value
+          that is itself an attrset becomes a folder on the toolbar, nested to
+          any depth.
+        '';
       };
 
       settings = mkOption {
@@ -249,6 +267,23 @@ with lib; let
       }
     '';
 
+  # An attrset value is a folder, a string is a URL. The two shapes are
+  # home-manager's directoryType and bookmarkType respectively; a folder is told
+  # apart by carrying `bookmarks` and no `url`. toolbar stays at its false
+  # default on nested folders - only the outermost one *is* the toolbar.
+  mkBookmarkNodes = mapAttrsToList (
+    name: value:
+      if isAttrs value
+      then {
+        inherit name;
+        bookmarks = mkBookmarkNodes value;
+      }
+      else {
+        inherit name;
+        url = value;
+      }
+  );
+
   mkBookmarks = bookmarks:
     optionalAttrs (bookmarks != {}) {
       force = true;
@@ -256,7 +291,7 @@ with lib; let
         {
           name = "toolbar";
           toolbar = true;
-          bookmarks = mapAttrsToList (name: url: {inherit name url;}) bookmarks;
+          bookmarks = mkBookmarkNodes bookmarks;
         }
       ];
     };
@@ -270,7 +305,10 @@ with lib; let
     inherit name;
     inherit (tenancy) id isDefault path;
     settings = commonSettings // tenancy.settings;
-    bookmarks = mkBookmarks (cfg.bookmarks // tenancy.bookmarks);
+    # recursiveUpdate, not //: a shallow merge would replace a shared folder
+    # wholesale when a tenancy declares one of the same name, silently dropping
+    # the global entries inside it. Identical to // while both sets are flat.
+    bookmarks = mkBookmarks (recursiveUpdate cfg.bookmarks tenancy.bookmarks);
     userChrome = mkUserChrome name tenancy;
   };
 
@@ -321,11 +359,12 @@ in {
     };
 
     bookmarks = mkOption {
-      type = types.attrsOf types.str;
+      type = bookmarkTreeType;
       default = {};
       example = {GitHub = "https://github.com";};
       description = ''
-        Bookmarks present in every profile, merged with each tenancy's own.
+        Bookmarks present in every profile, merged with each tenancy's own. As
+        with a tenancy's own set, an attrset value becomes a folder.
 
         Firefox re-imports these on every start and the import runs with
         replace: true, so the declared set is authoritative - bookmarks added
