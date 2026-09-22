@@ -144,16 +144,10 @@ in {
                 name = "helm";
                 path = "helm-charts";
               }
-              # Pulumi Go landing zone. No runner: the stacks live under
-              # accounts/<env>/<stack>, so `pulumi preview` only means anything
-              # once you have cd'd into one.
+              # Pulumi Go landing zone.
               {
                 name = "aws";
                 path = "aws";
-              }
-              {
-                name = "platform";
-                path = "platform";
               }
               {
                 name = "docs";
@@ -162,7 +156,6 @@ in {
               {
                 name = "keycloak";
                 path = "keycloak";
-                runner = "pulumi preview";
               }
             ];
           };
@@ -173,7 +166,6 @@ in {
               {
                 name = "uc";
                 path = "pineapple-uc";
-                runner = "mise run docs";
               }
               {
                 name = "infra";
@@ -195,37 +187,30 @@ in {
               {
                 name = "s76";
                 path = "k8s/s76";
-                runner = "mise run check:generated";
               }
               {
                 name = "fabric";
                 path = "mcp-fabric";
-                runner = "mise run ci";
               }
               {
                 name = "scm";
                 path = "scm-metrics-exporter";
-                runner = "mise run ci";
               }
               {
                 name = "verisure";
                 path = "verisure-exporter";
-                runner = "cargo test";
               }
               {
                 name = "nibe";
                 path = "nibe-exporter";
-                runner = "cargo test";
               }
               {
                 name = "whyx";
                 path = "whyx";
-                runner = "mise run ci";
               }
               {
                 name = "nixos";
                 path = "homelab-nixos";
-                runner = "nix flake check";
               }
             ];
           };

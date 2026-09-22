@@ -101,7 +101,7 @@ in {
   # environment on its own. An .envrc still has to be approved once with
   # `direnv allow`, by design - it is arbitrary shell code from a git repo.
   direnv = {
-    enable = true;
+    enable = false;
     enableZshIntegration = true;
 
     # Caches the flake devShell in the Nix store and keeps it from being
@@ -109,7 +109,7 @@ in {
     # re-evaluation. Matters for the flake-based repos - homelab-nixos,
     # mcp-fabric, pgoauth, jarvis - where a cold evaluation is slow enough to
     # feel like a hang on every directory change.
-    nix-direnv.enable = true;
+    nix-direnv.enable = false;
   };
 
   bat = {
@@ -323,10 +323,10 @@ in {
       set -g window-status-current-style "fg=#EBCB8B,bg=default,bold"
 
       # Window: inactive — grey pill (caps inherit fg=#4C566A from window-status-style)
-      set -g window-status-format "#[fg=#ECEFF4,bg=#4C566A] #I > #W #[default]"
+      set -g window-status-format "#[fg=#ECEFF4,bg=#4C566A] #I/#W #[default]"
 
       # Window: active — yellow pill (caps inherit fg=#EBCB8B from window-status-current-style)
-      set -g window-status-current-format "#[fg=#2E3440,bg=#EBCB8B] #I > #W #[default]"
+      set -g window-status-current-format "#[fg=#2E3440,bg=#EBCB8B] #I/#W #[default]"
 
       # Pane borders
       set -g pane-border-style "fg=#4C566A"

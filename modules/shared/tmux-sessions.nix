@@ -7,17 +7,19 @@
 # customers whose repos sit side by side under ~/projects/coconut, much as
 # containers.nix keys profiles by a path that two tenancies can share.
 #
-# Panes are placed but left idle apart from the editor. Several of these repos
-# front a ten-container compose stack, a kind cluster or an mkdocs server, and
-# two of them race for port 8000; starting all that on every attach would cost
-# minutes and gigabytes to serve a session usually opened just to read
-# something. The runner pane gets its command typed but not entered, so the
-# useful thing is one keystroke away without ever firing on its own.
+# A repo window holds nothing but its editor, full size. Each session then gets
+# one shared `term` window at its root, created last. Nothing is started there
+# and nothing is typed into it: several of these repos front a ten-container
+# compose stack, a kind cluster or an mkdocs server, and two of them race for
+# port 8000, so a session usually opened just to read something never pays for
+# any of that. Because that window sits at the session root rather than in a
+# repo, the .envrc files that scope AWS_CONFIG_FILE and KUBECONFIG per repo do
+# not apply to it - cd first when the command cares which account it talks to.
 #
 # Run this from outside tmux the first time after a reboot. home-manager.nix
 # guards the gpg-agent launch and the podman DOCKER_HOST probe behind
-# `if [[ -z "$TMUX" ]]`, so panes deliberately skip that work and inherit it
-# from whichever shell started the server instead.
+# `if [[ -z "$TMUX" ]]`, so these windows deliberately skip that work and
+# inherit it from whichever shell started the server instead.
 {
   config,
   lib,
@@ -33,7 +35,7 @@ with lib; let
         type = types.str;
         example = "helm";
         description = ''
-          Window name. Keep it short: window-status-format renders "#I > #W" and
+          Window name. Keep it short: window-status-format renders "#I/#W" and
           status-right is empty, so these pills are the only navigational signal
           in the status bar.
         '';
@@ -47,10 +49,10 @@ with lib; let
           taken as-is). Nested paths are fine - the most active jarsater repo
           lives two levels down at k8s/s76.
 
-          This is what every pane in the window is opened in, which is
-          load-bearing rather than cosmetic: several coconut repos carry an
-          .envrc that scopes AWS_CONFIG_FILE and KUBECONFIG to their own
-          directory, so a pane started elsewhere talks to the wrong account.
+          This is what the window is opened in, which is load-bearing rather
+          than cosmetic: several coconut repos carry an .envrc that scopes
+          AWS_CONFIG_FILE and KUBECONFIG to their own directory, so a window
+          started elsewhere talks to the wrong account.
         '';
       };
 
@@ -58,19 +60,8 @@ with lib; let
         type = types.bool;
         default = true;
         description = ''
-          Whether to start nvim in the first pane. Set it false for directories
-          that hold assets rather than code, which gives three bare shells.
-        '';
-      };
-
-      runner = mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        example = "mise run ci";
-        description = ''
-          Command typed into the third pane without a trailing newline, so it
-          waits on Enter. Meant for the repo's own gate - `make check`,
-          `mise run ci`, `pulumi preview` - not for anything long-lived.
+          Whether to start nvim in the window. Set it false for directories
+          that hold assets rather than code, which leaves a bare shell.
         '';
       };
     };
@@ -81,7 +72,10 @@ with lib; let
       root = mkOption {
         type = types.str;
         example = "/Users/jj/projects/coconut";
-        description = "Directory the session's window paths are resolved against.";
+        description = ''
+          Directory the session's window paths are resolved against, and the
+          working directory of the shared `term` window.
+        '';
       };
 
       windows = mkOption {
@@ -89,7 +83,8 @@ with lib; let
         default = [];
         description = ''
           Windows in creation order. The first one becomes the selected window,
-          so put the repo the day usually starts in at the top.
+          so put the repo the day usually starts in at the top. The `term`
+          window is appended after these.
         '';
       };
     };
@@ -115,11 +110,6 @@ with lib; let
           then "1"
           else "0"
         )
-        (escapeShellArg (
-          if window.runner == null
-          then ""
-          else window.runner
-        ))
       ];
   in
     pkgs.writeShellApplication {
@@ -141,25 +131,10 @@ with lib; let
         created=0
         first=""
 
-        # split-window resolves a percentage against the window size at the
-        # moment of the split, and a detached session is created at
-        # default-size (80x24) however wide the terminal really is. Splitting
-        # at that size and letting tmux rescale on attach lands the right-hand
-        # column well wide of 40%, so build the session at the real terminal
-        # size instead. The fallback only applies when there is no tty to ask,
-        # which in practice means a script or a hook rather than a login shell.
-        cols=240
-        rows=60
-        if [ -t 1 ]; then
-          cols=$(tput cols)
-          rows=$(tput lines)
-        fi
-
         add_window() {
           name=$1
           dir=$2
           editor=$3
-          runner=$4
 
           # A repo can be absent on a machine that has not cloned it yet, or
           # after a rename upstream. Skip that window rather than aborting and
@@ -172,28 +147,16 @@ with lib; let
           # The first window has to come from new-session; creating it with
           # new-window instead leaves a stray empty window 1 behind.
           if [ "$created" -eq 0 ]; then
-            tmux new-session -d -s "$session" -n "$name" -c "$dir" -x "$cols" -y "$rows"
+            tmux new-session -d -s "$session" -n "$name" -c "$dir"
             created=1
             first=$name
           else
             tmux new-window -t "$session:" -n "$name" -c "$dir"
           fi
 
-          # -c on both splits, because a split otherwise inherits the pane's
-          # current directory only until something cds, and these panes need to
-          # stay pinned to the repo for its .envrc to mean anything.
-          tmux split-window -h -t "$session:$name" -c "$dir" -l 40%
-          tmux split-window -v -t "$session:$name.2" -c "$dir" -l 50%
-
           if [ "$editor" -eq 1 ]; then
-            tmux send-keys -t "$session:$name.1" nvim C-m
+            tmux send-keys -t "$session:$name" nvim C-m
           fi
-
-          if [ -n "$runner" ]; then
-            tmux send-keys -t "$session:$name.3" "$runner"
-          fi
-
-          tmux select-pane -t "$session:$name.1"
         }
 
         ${concatMapStringsSep "\n" addWindow session.windows}
@@ -202,6 +165,10 @@ with lib; let
           echo "$0: no window directories exist under ${session.root}" >&2
           exit 1
         fi
+
+        # After the guard, not before: with no repo window there is no session
+        # to hang this one off.
+        tmux new-window -t "$session:" -n term -c ${escapeShellArg session.root}
 
         tmux select-window -t "$session:$first"
         attach
