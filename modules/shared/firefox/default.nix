@@ -339,6 +339,7 @@ in {
   imports = [
     ./containers.nix
     ./granted.nix
+    ./router.nix
   ];
 
   options.local.firefox = {
