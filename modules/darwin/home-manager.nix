@@ -262,6 +262,13 @@ in {
               # Place a copy of this config to ~/.aerospace.toml
               # After that, you can edit ~/.aerospace.toml to your liking
 
+              # See: https://nikitabobko.github.io/AeroSpace/guide#config-version
+              config-version = 2;
+
+              # Version 2 no longer infers these from the bindings, so list the
+              # workspaces bound below to keep them alive when empty.
+              persistent-workspaces = ["1" "2" "3" "4" "5" "6" "7" "8" "9"];
+
               # You can use it to add commands that run after login to macOS user session.
               # "start-at-login" needs to be "true" for "after-login-command" to work
               # Available commands: https://nikitabobko.github.io/AeroSpace/commands
