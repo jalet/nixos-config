@@ -23,6 +23,11 @@
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+
+    # sofka is not packaged in nixpkgs, so it comes from upstream's own flake.
+    # It deliberately does not follow our nixpkgs: upstream pins nixos-26.05 and
+    # builds the Rust package against that pkgs set.
+    sofka.url = "github:nklmilojevic/sofka";
   };
 
   outputs = {
@@ -34,6 +39,7 @@
     nix-homebrew,
     nixpkgs,
     self,
+    sofka,
   } @ inputs: let
     user = "jj";
     linuxSystems = ["x86_64-linux" "aarch64-linux"];

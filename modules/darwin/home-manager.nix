@@ -3,6 +3,7 @@
   pkgs,
   lib,
   home-manager,
+  sofka,
   ...
 }: let
   user = "jj";
@@ -41,6 +42,7 @@ in {
       imports = [
         ../shared/firefox
         ../shared/tmux-sessions.nix
+        sofka.homeManagerModules.default
       ];
 
       # Two profiles: work and personal. The split that matters is keeping
@@ -226,7 +228,7 @@ in {
           additionalFiles
         ];
         stateVersion = "23.11";
-        activation.generateZshCompletions = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        activation.generateZshCompletions = lib.hm.dag.entryAfter ["writeBoundary" "installPackages"] ''
           export PATH="$HOME/.nix-profile/bin:/run/current-system/sw/bin:$PATH"
           COMP_DIR="$HOME/.zsh/completions"
           $DRY_RUN_CMD mkdir -p "$COMP_DIR"
@@ -248,6 +250,7 @@ in {
           gen argocd    _argocd    completion zsh
           gen kubecolor _kubecolor completion zsh
           gen podman    _podman    completion zsh
+          gen sofka     _sofka     completion zsh
 
           # Force compinit to rebuild its dump on next shell so the new files are picked up.
           $DRY_RUN_CMD rm -f "$HOME/.zcompdump" "$HOME"/.zcompdump-*
@@ -255,6 +258,43 @@ in {
       };
       programs =
         {
+          # Kubernetes TUI, replacing k9s. Config lands in
+          # ~/.config/sofka/config.toml via the upstream module's xdg.configFile.
+          sofka = {
+            enable = true;
+
+            skin.name = "nord";
+
+            # Ported from the old k9s aliases.yaml. sofka alias targets are
+            # plural resource names, group-qualified only where names overlap,
+            # so k9s' "v1/secrets" is just "secrets" here.
+            aliases = {
+              dp = "deployments";
+              sec = "secrets";
+              jo = "jobs";
+              cr = "clusterroles";
+              crb = "clusterrolebindings";
+              ro = "roles";
+              rb = "rolebindings";
+              np = "networkpolicies";
+            };
+
+            # Ported from the old k9s views.yaml: a WORKLOAD column from the
+            # Karpenter workload-type node label. Views overlay sofka's curated
+            # columns unless replace = true, so only the extra column is listed
+            # rather than repeating the defaults. Paths are RFC 6901 JSON
+            # pointers, where ~1 escapes the "/" inside the label key.
+            views."v1/nodes" = {
+              sort = "NAME:asc";
+              columns = [
+                {
+                  name = "WORKLOAD";
+                  path = "/metadata/labels/node.playgroundtech.io~1workload-type";
+                }
+              ];
+            };
+          };
+
           aerospace = {
             enable = true;
             launchd.enable = true;

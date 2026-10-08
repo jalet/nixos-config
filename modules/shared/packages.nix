@@ -79,7 +79,6 @@ with pkgs; [
   cilium-cli
   hubble
   istioctl
-  k9s
   kind
   kubecolor
   kubectl
