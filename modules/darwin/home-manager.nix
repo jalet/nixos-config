@@ -83,12 +83,13 @@ in {
             awsPrefixes = ["Jarsater" "jarsater-"];
             bookmarks = {
               "AWS" = "https://jarsater.awsapps.com/start/#/";
+              "ArgoCD" = "https://argocd.jarsater.lan/";
               "Grafana" = "https://grafana.jarsater.lan";
               "Hubble" = "https://hubble.jarsater.lan";
-              "Kargo" = "https://kargo.jarsater.lan";
               "Keycloak" = "https://keycloak.jarsater.lan";
               "Longhorn" = "https://longhorn.jarsater.lan/";
               "Proxmox" = "https://pve.jarsater.lan:8006";
+              "Pulumi" = "https://pulumi.jarsater.lan/";
               "Vault" = "https://vault.jarsater.lan";
             };
           };
