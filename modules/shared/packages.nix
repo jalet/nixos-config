@@ -35,7 +35,6 @@ with pkgs; [
   # ssm-session-manager-plugin  # broken in nixpkgs - Go vendoring issue
   age
   gnupg
-  proton-pass-cli
   sops
   step-cli
   yubikey-agent

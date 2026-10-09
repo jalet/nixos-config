@@ -45,7 +45,6 @@ in {
       # makes the declared containers usable day to day.
       (extension "multi-account-containers" "@testpilot-containers")
 
-      (extension "proton-pass" "78272b6fa58f4a1abaac99321d503a20@proton.me")
       (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}")
 
       # 1Password works standalone (vault, autofill, passkeys) but cannot reach
@@ -66,7 +65,7 @@ in {
   ];
 
   # -- Passwords --------------------------------------------------------------
-  # Keep Firefox's own manager out of the way of the three above.
+  # Keep Firefox's own manager out of the way of the two above.
   PasswordManagerEnabled = false;
   OfferToSaveLogins = false;
 
