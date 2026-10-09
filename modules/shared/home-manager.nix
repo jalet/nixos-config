@@ -5,6 +5,7 @@
 }: let
   name = "Joakim Jarsäter";
   email = "joakim@jarsater.com";
+  workEmail = "joakim@playgroundtech.io";
   signingkey = "0x4EE738F142BF5D51";
 in {
   # Shared shell configuration
@@ -142,6 +143,13 @@ in {
     enable = true;
 
     signing.format = "openpgp";
+
+    # Work repos commit as the Playground address. The signing key carries a
+    # UID for it, so signatures still verify.
+    includes = map (dir: {
+      condition = "gitdir:~/projects/${dir}/";
+      contents.user.email = workEmail;
+    }) ["playgroundtech" "coconut"];
 
     settings = {
       alias = {
