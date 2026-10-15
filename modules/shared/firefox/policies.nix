@@ -46,11 +46,6 @@ in {
       (extension "multi-account-containers" "@testpilot-containers")
 
       (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}")
-
-      # 1Password works standalone (vault, autofill, passkeys) but cannot reach
-      # the desktop app: that handshake needs an Apple Team ID, and the Nix
-      # bundle is unsigned. Unlock is account password + Secret Key.
-      (extension "1password-x-password-manager" "{d634138d-c276-4fc8-924b-40a0ea21d284}")
     ];
 
   # -- Search -----------------------------------------------------------------
