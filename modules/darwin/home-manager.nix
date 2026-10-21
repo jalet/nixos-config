@@ -130,10 +130,11 @@ in {
         };
       };
 
-      # One session per working context, ordered so the first window is where
-      # the day usually starts. Coconut and Pineapple share a root because they
-      # are two customers whose repos sit side by side under ~/projects/coconut;
-      # the window list, not the path, is what separates them.
+      # One session per working context. Window 1 is always a bare shell; the
+      # repo windows follow, most active first. Coconut and Pineapple share a
+      # root because they are two customers whose repos sit side by side under
+      # ~/projects/coconut; the window list, not the path, is what separates
+      # them.
       local.tmux = {
         enable = true;
 
@@ -141,24 +142,31 @@ in {
           Coconut = {
             root = "${config.home.homeDirectory}/projects/coconut";
             windows = [
-              # Highest-churn repo in the tree by a wide margin, and what
-              # ArgoCD actually deploys from.
-              {
-                name = "helm";
-                path = "helm-charts";
-              }
-              # Pulumi Go landing zone.
+              # Pulumi Go landing zone, and the highest-churn repo in the tree.
               {
                 name = "aws";
                 path = "aws";
               }
               {
-                name = "docs";
-                path = "project";
+                name = "mm";
+                path = "mattermost-plugins";
               }
               {
-                name = "keycloak";
-                path = "keycloak";
+                name = "tvilling";
+                path = "tvilling";
+              }
+              # What ArgoCD actually deploys from.
+              {
+                name = "helm";
+                path = "helm-charts";
+              }
+              {
+                name = "kulissen";
+                path = "kulissen";
+              }
+              {
+                name = "docs";
+                path = "project";
               }
             ];
           };

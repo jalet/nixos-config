@@ -7,8 +7,9 @@
 # customers whose repos sit side by side under ~/projects/coconut, much as
 # containers.nix keys profiles by a path that two tenancies can share.
 #
-# A repo window holds nothing but its editor, full size. Each session then gets
-# one shared `term` window at its root, created last. Nothing is started there
+# A repo window holds nothing but its editor, full size. Each session also gets
+# one shared `term` window at its root, created first so it always sits at
+# index 1 and is selected on open. Nothing is started there
 # and nothing is typed into it: several of these repos front a ten-container
 # compose stack, a kind cluster or an mkdocs server, and two of them race for
 # port 8000, so a session usually opened just to read something never pays for
@@ -82,9 +83,9 @@ with lib; let
         type = types.listOf windowType;
         default = [];
         description = ''
-          Windows in creation order. The first one becomes the selected window,
-          so put the repo the day usually starts in at the top. The `term`
-          window is appended after these.
+          Repo windows in creation order. They follow the `term` window, which
+          is always window 1 and selected on open, so put the most active repo
+          at the top to land it at index 2.
         '';
       };
     };
@@ -128,8 +129,16 @@ with lib; let
           exit 0
         fi
 
-        created=0
-        first=""
+        root=${escapeShellArg session.root}
+
+        if [ ! -d "$root" ]; then
+          echo "$0: session root $root does not exist" >&2
+          exit 1
+        fi
+
+        # The shell window comes from new-session so it takes index 1;
+        # creating the session from a repo window would push it further down.
+        tmux new-session -d -s "$session" -n term -c "$root"
 
         add_window() {
           name=$1
@@ -144,15 +153,7 @@ with lib; let
             return 0
           fi
 
-          # The first window has to come from new-session; creating it with
-          # new-window instead leaves a stray empty window 1 behind.
-          if [ "$created" -eq 0 ]; then
-            tmux new-session -d -s "$session" -n "$name" -c "$dir"
-            created=1
-            first=$name
-          else
-            tmux new-window -t "$session:" -n "$name" -c "$dir"
-          fi
+          tmux new-window -t "$session:" -n "$name" -c "$dir"
 
           if [ "$editor" -eq 1 ]; then
             tmux send-keys -t "$session:$name" nvim C-m
@@ -161,16 +162,7 @@ with lib; let
 
         ${concatMapStringsSep "\n" addWindow session.windows}
 
-        if [ "$created" -eq 0 ]; then
-          echo "$0: no window directories exist under ${session.root}" >&2
-          exit 1
-        fi
-
-        # After the guard, not before: with no repo window there is no session
-        # to hang this one off.
-        tmux new-window -t "$session:" -n term -c ${escapeShellArg session.root}
-
-        tmux select-window -t "$session:$first"
+        tmux select-window -t "$session:term"
         attach
       '';
     };
