@@ -4,6 +4,7 @@ with pkgs; [
   adr-tools
   awscli2
   awslogs
+  ssm-session-manager-plugin
   bash-completion
   bat
   btop
@@ -32,7 +33,6 @@ with pkgs; [
   zip
 
   # Encryption and security tools
-  # ssm-session-manager-plugin  # broken in nixpkgs - Go vendoring issue
   age
   gnupg
   sops
